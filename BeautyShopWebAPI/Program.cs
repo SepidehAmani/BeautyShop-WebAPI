@@ -1,4 +1,7 @@
 
+using BeautyShopInfrastructure.DBContext;
+using Microsoft.EntityFrameworkCore;
+
 namespace BeautyShopWebAPI
 {
     public class Program
@@ -13,6 +16,9 @@ namespace BeautyShopWebAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<AppDbContext>(options => 
+            options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopDb")));
 
             var app = builder.Build();
 
