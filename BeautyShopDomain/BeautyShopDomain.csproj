@@ -8,10 +8,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Entities\ContactUs\" />
-    <Folder Include="Entities\User\" />
-    <Folder Include="Entities\Order\" />
-    <Folder Include="Entities\Product\" />
     <Folder Include="RepositoryInterfaces\" />
   </ItemGroup>
 
