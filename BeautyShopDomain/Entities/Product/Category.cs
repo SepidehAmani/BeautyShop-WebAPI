@@ -5,12 +5,10 @@ namespace BeautyShopDomain.Entities.Product;
 
 public class Category : BaseEntity
 {
-    [ForeignKey(nameof(ParentCategory))]
     public int ParentId { get; set; }
     public string Name { get; set; }
     public bool IsDelete { get; set; }
 
 
-    public Category? ParentCategory { get; set; }
     public ICollection<Product>? Products { get; set; }
 }
