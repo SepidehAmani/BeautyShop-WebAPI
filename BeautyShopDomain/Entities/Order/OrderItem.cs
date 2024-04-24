@@ -1,6 +1,5 @@
 ﻿using BeautyShopDomain.Entities.Base;
 using BeautyShopDomain.Entities.Product;
-using System.ComponentModel.DataAnnotations;
 
 namespace BeautyShopDomain.Entities.Order;
 
