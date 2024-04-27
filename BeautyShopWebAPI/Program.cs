@@ -1,5 +1,9 @@
 
+using BeautyShopApplication.Services.Implement;
+using BeautyShopApplication.Services.Interface;
+using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
+using BeautyShopInfrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeautyShopWebAPI
@@ -12,13 +16,25 @@ namespace BeautyShopWebAPI
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.ReturnHttpNotAcceptable = true;
+            })
+                .AddNewtonsoftJson()
+                .AddXmlDataContractSerializerFormatters();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<AppDbContext>(options => 
+            builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopDb")));
+
+            //IOC
+            builder.Services.AddScoped<IContactUsRepository, ContactUsRepository>();
+            builder.Services.AddScoped<IContactUsService, ContactUsService>();
+
+
+
 
             var app = builder.Build();
 
@@ -31,9 +47,14 @@ namespace BeautyShopWebAPI
 
             app.UseHttpsRedirection();
 
+            //app.UseRouting();
+
             app.UseAuthorization();
 
-
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
             app.MapControllers();
 
             app.Run();
