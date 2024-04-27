@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Implement\" />
-    <Folder Include="Services\Interface\" />
     <Folder Include="Utilities\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BeautyShopDomain\BeautyShopDomain.csproj" />
   </ItemGroup>
 
 </Project>
