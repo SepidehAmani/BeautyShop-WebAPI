@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{036A5358-2A67-4259-A1F2-CBF7FD60DFDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautyShopWebAPI", "BeautyShopWebAPI\BeautyShopWebAPI.csproj", "{2FE46ED6-C4DD-4907-B83C-E255D0E2F3E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeautyShopWebAPI", "BeautyShopWebAPI\BeautyShopWebAPI.csproj", "{2FE46ED6-C4DD-4907-B83C-E255D0E2F3E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautyShopApplication", "BeautyShopApplication\BeautyShopApplication.csproj", "{84CB5A4F-C52A-43D2-8300-9F7AC10353A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeautyShopApplication", "BeautyShopApplication\BeautyShopApplication.csproj", "{84CB5A4F-C52A-43D2-8300-9F7AC10353A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautyShopDomain", "BeautyShopDomain\BeautyShopDomain.csproj", "{D309B3B6-B15D-4C7F-A0A3-12E23F5C7ABF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeautyShopDomain", "BeautyShopDomain\BeautyShopDomain.csproj", "{D309B3B6-B15D-4C7F-A0A3-12E23F5C7ABF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautyShopInfrastructure", "BeautyShopInfrastructure\BeautyShopInfrastructure.csproj", "{0D133658-2A5E-47F9-9654-E502EE724ACA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeautyShopInfrastructure", "BeautyShopInfrastructure\BeautyShopInfrastructure.csproj", "{0D133658-2A5E-47F9-9654-E502EE724ACA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

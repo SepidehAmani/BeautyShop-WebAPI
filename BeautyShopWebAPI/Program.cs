@@ -5,6 +5,8 @@ using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
 using BeautyShopInfrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BeautyShopWebAPI
 {
@@ -23,8 +25,12 @@ namespace BeautyShopWebAPI
                 .AddNewtonsoftJson()
                 .AddXmlDataContractSerializerFormatters();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopDb")));
@@ -32,9 +38,25 @@ namespace BeautyShopWebAPI
             //IOC
             builder.Services.AddScoped<IContactUsRepository, ContactUsRepository>();
             builder.Services.AddScoped<IContactUsService, ContactUsService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
 
 
-
+            builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new()
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["Authentication:Issuer"],
+                        ValidAudience = builder.Configuration["Authentication:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
+                    };
+                }
+            );
 
             var app = builder.Build();
 
@@ -49,6 +71,7 @@ namespace BeautyShopWebAPI
 
             //app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             //app.UseEndpoints(endpoints =>

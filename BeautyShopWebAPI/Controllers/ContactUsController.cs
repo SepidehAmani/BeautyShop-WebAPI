@@ -1,6 +1,7 @@
 ﻿using BeautyShopApplication.Services.Interface;
 using BeautyShopDomain.Entities.ContactUs;
 using BeautyShopDomain.RepositoryInterfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,8 @@ namespace BeautyShopWebAPI.Controllers
 
 
         [HttpGet]
+
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ContactUs>>> GetListOfContactUs(CancellationToken cancellation=default)
         {
             var model = await _contactUsService.GetListOfContactUs(cancellation);
