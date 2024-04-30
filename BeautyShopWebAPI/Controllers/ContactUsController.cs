@@ -10,6 +10,7 @@ namespace BeautyShopWebAPI.Controllers
 {
     [Route("api/ContactUs")]
     [ApiController]
+    [Authorize]
     public class ContactUsController : ControllerBase
     {
         private readonly IContactUsService _contactUsService;
@@ -22,8 +23,6 @@ namespace BeautyShopWebAPI.Controllers
 
 
         [HttpGet]
-
-        [Authorize]
         public async Task<ActionResult<IEnumerable<ContactUs>>> GetListOfContactUs(CancellationToken cancellation=default)
         {
             var model = await _contactUsService.GetListOfContactUs(cancellation);

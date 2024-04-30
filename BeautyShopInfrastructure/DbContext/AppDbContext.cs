@@ -12,6 +12,23 @@ public class AppDbContext : DbContext
     {
     }
 
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<Role>().HasData(new Role()
+        {
+            Id=-1,
+            UniqueName = "Admin"
+        });
+
+        builder.Entity<Category>().HasData(
+            [new Category() { Name = "آرایشی" , Id=-2 },
+            new Category() { Name = "بهداشتی", Id=-1 }
+            ]);
+    }
+
     public DbSet<ContactUs> ContactUs { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
