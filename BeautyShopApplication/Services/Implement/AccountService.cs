@@ -15,55 +15,48 @@ namespace BeautyShopApplication.Services.Implement;
 public class AccountService : IAccountService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IConfiguration _configuration;
-    private readonly UserManager<IdentityUser> _userManager;
-    public AccountService(IUserRepository userRepository, IConfiguration configuration, UserManager<IdentityUser> userManager)
+    public AccountService(IUserRepository userRepository,IRoleRepository roleRepository, IConfiguration configuration)
     {
         _userRepository = userRepository;
+        _roleRepository = roleRepository;
         _configuration = configuration;
-        _userManager = userManager;
     }
 
 
     public async Task<bool> RegisterUser (RegisterUserDTO userDTO, CancellationToken cancellation)
     {
-        var user = new IdentityUser()
+        var userExists = await _userRepository.UserExistsWithThisMobile(userDTO.MobileNumber, cancellation);
+        if (userExists) return false;
+
+        var user = new User()
         {
-            UserName = userDTO.Email,
-            Email = userDTO.Email,
-            PhoneNumber = userDTO.Mobile
+            Username = userDTO.UserName,
+            MobileNumber = userDTO.MobileNumber.Trim(),
+            Password = PasswordHasher.EncodePasswordMd5(userDTO.Password)
         };
 
-        var result = await _userManager.CreateAsync(user, userDTO.Password);
+        _userRepository.AddUser(user);
+        await _userRepository.SaveChangesAsync(cancellation);
 
-        if(result.Succeeded)
-        {
-            result = await _userManager.AddToRoleAsync(user, "NormalUser");
-            if(result.Succeeded)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return true;
     }
 
 
     public async Task<LoginUserResponse> LoginUser(LoginUserDTO userDTO, CancellationToken cancellation)
     {
-        var user = await _userManager.FindByEmailAsync(userDTO.Email);
+        var user = await _userRepository.GetUser_By_MobileAndPassword(userDTO.MobileNumber,userDTO.Password, cancellation);
         if (user == null) return new LoginUserResponse(false, "");
-        var result = await _userManager.CheckPasswordAsync(user, userDTO.Password);
-        if(!result) return new LoginUserResponse(false, "");
 
-        var roles = await _userManager.GetRolesAsync(user);
+        var roles = await _roleRepository.GetRolesByUserId(user.Id, cancellation);
         var token = GetToken(user,roles);
 
         return new LoginUserResponse(true, token);
     }
 
 
-    string GetToken(IdentityUser user , IList<string> roles)
+    string GetToken(User user , ICollection<Role>? roles)
     {
         var securityKey = new SymmetricSecurityKey(
                 Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"])
@@ -73,13 +66,17 @@ public class AccountService : IAccountService
 
         var claimsForToken = new List<Claim>();
         claimsForToken.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-        claimsForToken.Add(new Claim(ClaimTypes.Name, user.UserName));
-        claimsForToken.Add(new Claim(ClaimTypes.Email, user.Email));
+        claimsForToken.Add(new Claim(ClaimTypes.Name, user.Username));
+        claimsForToken.Add(new Claim(ClaimTypes.MobilePhone, user.MobileNumber));
 
-        foreach (var role in roles)
+        if(roles != null)
         {
-            claimsForToken.Add(new Claim(ClaimTypes.Role, role));
+            foreach (var role in roles)
+            {
+                claimsForToken.Add(new Claim(ClaimTypes.Role, role.UniqueName));
+            }
         }
+        
 
         var jwtSecurityToke = new JwtSecurityToken(
             _configuration["Authentication:Issuer"],

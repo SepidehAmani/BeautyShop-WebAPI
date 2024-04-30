@@ -5,11 +5,10 @@ namespace BeautyShopDomain.DTOs;
 public class RegisterUserDTO
 {
     [Required]
-    [DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
+    public string UserName { get; set; }
     [Required]
     [DataType(DataType.PhoneNumber)]
-    public string Mobile { get; set; }
+    public string MobileNumber { get; set; }
     [Required]
     [DataType(DataType.Password)]
     public string Password { get; set; }

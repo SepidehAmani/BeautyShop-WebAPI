@@ -36,31 +36,15 @@ namespace BeautyShopWebAPI
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopDb")));
 
-            builder.Services.AddDbContext<AuthDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopAuthDb")));
 
             //IOC
             builder.Services.AddScoped<IContactUsRepository, ContactUsRepository>();
             builder.Services.AddScoped<IContactUsService, ContactUsService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 
-            builder.Services.AddIdentityCore<IdentityUser>()
-                .AddRoles<IdentityRole>()
-                .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("BeautyShop")
-                .AddEntityFrameworkStores<AuthDbContext>()
-                .AddDefaultTokenProviders();
-
-            builder.Services.Configure<IdentityOptions>(options =>
-            {
-                //Change them as you like
-                options.Password.RequireDigit = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
-            });
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

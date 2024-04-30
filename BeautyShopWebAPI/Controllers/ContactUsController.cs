@@ -10,7 +10,7 @@ namespace BeautyShopWebAPI.Controllers
 {
     [Route("api/ContactUs")]
     [ApiController]
-    [Authorize(Roles ="NormalUser")]
+    [Authorize]
     public class ContactUsController : ControllerBase
     {
         private readonly IContactUsService _contactUsService;

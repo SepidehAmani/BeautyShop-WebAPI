@@ -5,8 +5,8 @@ namespace BeautyShopDomain.DTOs;
 public class LoginUserDTO
 {
     [Required]
-    [DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
+    [DataType(DataType.PhoneNumber)]
+    public string MobileNumber { get; set; }
     [Required]
     [DataType(DataType.Password)]
     public string Password { get; set; }
