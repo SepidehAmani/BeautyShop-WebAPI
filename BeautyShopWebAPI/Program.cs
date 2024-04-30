@@ -1,9 +1,10 @@
-
 using BeautyShopApplication.Services.Implement;
 using BeautyShopApplication.Services.Interface;
 using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
 using BeautyShopInfrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -35,6 +36,9 @@ namespace BeautyShopWebAPI
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopDb")));
 
+            builder.Services.AddDbContext<AuthDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopAuthDb")));
+
             //IOC
             builder.Services.AddScoped<IContactUsRepository, ContactUsRepository>();
             builder.Services.AddScoped<IContactUsService, ContactUsService>();
@@ -42,18 +46,34 @@ namespace BeautyShopWebAPI
             builder.Services.AddScoped<IAccountService, AccountService>();
 
 
-            builder.Services.AddAuthentication("Bearer")
+            builder.Services.AddIdentityCore<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("BeautyShop")
+                .AddEntityFrameworkStores<AuthDbContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                //Change them as you like
+                options.Password.RequireDigit = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+            });
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.TokenValidationParameters = new()
+                    options.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
+                        ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = builder.Configuration["Authentication:Issuer"],
                         ValidAudience = builder.Configuration["Authentication:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
                     };
                 }
             );
@@ -69,15 +89,10 @@ namespace BeautyShopWebAPI
 
             app.UseHttpsRedirection();
 
-            //app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //});
+
             app.MapControllers();
 
             app.Run();

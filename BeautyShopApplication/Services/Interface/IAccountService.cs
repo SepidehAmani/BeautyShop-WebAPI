@@ -5,6 +5,6 @@ namespace BeautyShopApplication.Services.Interface;
 
 public interface IAccountService
 {
-    Task<RegisterUserResponse> RegisterUser(RegisterUserDTO userDTO, CancellationToken cancellation);
+    Task<bool> RegisterUser(RegisterUserDTO userDTO, CancellationToken cancellation);
     Task<LoginUserResponse> LoginUser(LoginUserDTO userDTO, CancellationToken cancellation);
 }

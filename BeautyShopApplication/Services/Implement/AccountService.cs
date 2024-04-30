@@ -3,6 +3,7 @@ using BeautyShopApplication.Utilities;
 using BeautyShopDomain.DTOs;
 using BeautyShopDomain.Entities.User;
 using BeautyShopDomain.RepositoryInterfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,54 +16,70 @@ public class AccountService : IAccountService
 {
     private readonly IUserRepository _userRepository;
     private readonly IConfiguration _configuration;
-    public AccountService(IUserRepository userRepository, IConfiguration configuration)
+    private readonly UserManager<IdentityUser> _userManager;
+    public AccountService(IUserRepository userRepository, IConfiguration configuration, UserManager<IdentityUser> userManager)
     {
         _userRepository = userRepository;
         _configuration = configuration;
+        _userManager = userManager;
     }
 
 
-    public async Task<RegisterUserResponse> RegisterUser (RegisterUserDTO userDTO, CancellationToken cancellation)
+    public async Task<bool> RegisterUser (RegisterUserDTO userDTO, CancellationToken cancellation)
     {
-        var userExists = await _userRepository.UserExistsWithThisMobile(userDTO.Mobile,cancellation);
-        if (userExists) return new RegisterUserResponse(false, "There is already a user with this MobileNumber");
-
-        User user = new()
-        { MobileNumber = userDTO.Mobile,Username = userDTO.UserName,
-            Password=PasswordHasher.EncodePasswordMd5(userDTO.Password)
+        var user = new IdentityUser()
+        {
+            UserName = userDTO.Email,
+            Email = userDTO.Email,
+            PhoneNumber = userDTO.Mobile
         };
 
-        _userRepository.AddUser(user);
-        await _userRepository.SaveChangesAsync(cancellation);
+        var result = await _userManager.CreateAsync(user, userDTO.Password);
 
-        return new RegisterUserResponse(true, "New User Added Successfully");
+        if(result.Succeeded)
+        {
+            result = await _userManager.AddToRoleAsync(user, "NormalUser");
+            if(result.Succeeded)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
     public async Task<LoginUserResponse> LoginUser(LoginUserDTO userDTO, CancellationToken cancellation)
     {
-        var user = await _userRepository.GetUser_By_MobileAndPassword(userDTO.Mobile,userDTO.Password,cancellation);
-        if (user == null) return new LoginUserResponse(false, "There is no User with this Info", "");
+        var user = await _userManager.FindByEmailAsync(userDTO.Email);
+        if (user == null) return new LoginUserResponse(false, "");
+        var result = await _userManager.CheckPasswordAsync(user, userDTO.Password);
+        if(!result) return new LoginUserResponse(false, "");
 
-        var token = GetToken(user);
+        var roles = await _userManager.GetRolesAsync(user);
+        var token = GetToken(user,roles);
 
-        return new LoginUserResponse(true, "Login was Successful", token);
+        return new LoginUserResponse(true, token);
     }
 
 
-    string GetToken(User user)
+    string GetToken(IdentityUser user , IList<string> roles)
     {
         var securityKey = new SymmetricSecurityKey(
                 Encoding.ASCII.GetBytes(_configuration["Authentication:SecretForKey"])
                 );
         var signingCredentials = new SigningCredentials(
-            securityKey, SecurityAlgorithms.HmacSha256
-            );
+            securityKey, SecurityAlgorithms.HmacSha256);
 
         var claimsForToken = new List<Claim>();
         claimsForToken.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-        claimsForToken.Add(new Claim(ClaimTypes.Name, user.Username));
-        claimsForToken.Add(new Claim(ClaimTypes.MobilePhone, user.MobileNumber));
+        claimsForToken.Add(new Claim(ClaimTypes.Name, user.UserName));
+        claimsForToken.Add(new Claim(ClaimTypes.Email, user.Email));
+
+        foreach (var role in roles)
+        {
+            claimsForToken.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var jwtSecurityToke = new JwtSecurityToken(
             _configuration["Authentication:Issuer"],

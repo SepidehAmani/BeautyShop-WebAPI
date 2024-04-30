@@ -2,5 +2,5 @@
 {
     public record RegisterUserResponse(bool Successful,string Message);
 
-    public record LoginUserResponse(bool Successful, string Message, string Token);
+    public record LoginUserResponse(bool Successful, string Token);
 }
