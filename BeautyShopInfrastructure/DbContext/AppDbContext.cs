@@ -26,7 +26,9 @@ public class AppDbContext : DbContext
 
         builder.Entity<Category>().HasData(
             [new Category() { Name = "آرایشی" , Id=-2 },
-            new Category() { Name = "بهداشتی", Id=-1 }
+            new Category() { Name = "بهداشتی", Id=-1 },
+            new Category() { Name = "زیردسته بندی آرایشی", Id = -4,ParentId=-2},
+            new Category() {Name = "زیردسته بندی بهداشتی", Id = -3,ParentId=-1}
             ]);
 
         builder.Entity<UserSelectedRole>().HasData(new UserSelectedRole() 
