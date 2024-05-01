@@ -44,6 +44,7 @@ namespace BeautyShopWebAPI
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
 
 
 

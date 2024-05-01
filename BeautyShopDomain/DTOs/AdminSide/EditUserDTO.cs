@@ -5,6 +5,7 @@ namespace BeautyShopDomain.DTOs.AdminSide;
 public class EditUserDTO
 {
     [Required]
+    [MinLength(4)]
     public string Username { get; set; }
     [Required]
     [DataType(DataType.PhoneNumber)]

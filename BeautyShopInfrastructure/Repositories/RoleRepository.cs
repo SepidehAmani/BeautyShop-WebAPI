@@ -1,4 +1,5 @@
-﻿using BeautyShopDomain.Entities.User;
+﻿using BeautyShopDomain.DTOs.AdminSide;
+using BeautyShopDomain.Entities.User;
 using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
 using Microsoft.EntityFrameworkCore;
@@ -81,5 +82,51 @@ public class RoleRepository : IRoleRepository
             _context.Update(record);
         }
         await _context.SaveChangesAsync(cancellation);
+    }
+
+
+    public async Task<ICollection<RoleDTO>?> GetListOfRolDTOs(CancellationToken cancellation)
+    {
+        return await _context.Roles.Where(p => !p.IsDelete)
+            .Select(p => new RoleDTO() { Id = p.Id, CreateDate = p.CreateDate, UniqueName = p.UniqueName })
+            .ToListAsync(cancellation);
+    }
+
+    public async Task<RoleDTO?> GetRoleDTOByRoleId(int roleId,CancellationToken cancellation)
+    {
+        return await _context.Roles.Where(p => p.Id == roleId && !p.IsDelete)
+            .Select(p => new RoleDTO() { Id = p.Id, CreateDate = p.CreateDate, UniqueName = p.UniqueName })
+            .FirstOrDefaultAsync(cancellation);
+    }
+
+
+    public async Task<bool> RoleExistsWithName(string name,CancellationToken cancellation)
+    {
+        return await _context.Roles.AnyAsync(p=> p.UniqueName.ToLower() == name.ToLower() && !p.IsDelete , cancellation);
+    }
+
+    public void AddRole(Role role)
+    {
+        _context.Roles.Add(role);
+    }
+
+    public void UpdateRole(Role role)
+    {
+        _context.Roles.Update(role);
+    }
+
+    public async Task SaveChangesAsync(CancellationToken cancellation)
+    {
+        await _context.SaveChangesAsync(cancellation);
+    }
+
+    public async Task<bool> RoleExistsWithName_ForEditRole(int roleId ,string name, CancellationToken cancellation)
+    {
+        return await _context.Roles.AnyAsync(p => p.Id != roleId && p.UniqueName.ToLower() == name.ToLower() && !p.IsDelete, cancellation);
+    }
+
+    public async Task<Role?> GetRoleById(int roleId,CancellationToken cancellation)
+    {
+        return await _context.Roles.FirstOrDefaultAsync(p => p.Id == roleId && !p.IsDelete);
     }
 }
