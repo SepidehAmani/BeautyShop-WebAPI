@@ -5,7 +5,7 @@ namespace BeautyShopDomain.Entities.Product;
 
 public class Category : BaseEntity
 {
-    public int ParentId { get; set; }
+    public int? ParentId { get; set; }
     public string Name { get; set; }
     public bool IsDelete { get; set; }
 
