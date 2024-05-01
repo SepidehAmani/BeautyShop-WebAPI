@@ -1,4 +1,5 @@
-﻿using BeautyShopDomain.Entities.ContactUs;
+﻿using BeautyShopApplication.Utilities;
+using BeautyShopDomain.Entities.ContactUs;
 using BeautyShopDomain.Entities.Order;
 using BeautyShopDomain.Entities.Product;
 using BeautyShopDomain.Entities.User;
@@ -27,6 +28,15 @@ public class AppDbContext : DbContext
             [new Category() { Name = "آرایشی" , Id=-2 },
             new Category() { Name = "بهداشتی", Id=-1 }
             ]);
+
+        builder.Entity<UserSelectedRole>().HasData(new UserSelectedRole() 
+        { Id = -1, RoleId = -1, UserId = -1, 
+        });
+
+        builder.Entity<User>().HasData(new User() 
+        { Id = -1, MobileNumber = "09141001010", Username = "Admin"
+            , Password = PasswordHasher.EncodePasswordMd5("qwe123") 
+        });
     }
 
     public DbSet<ContactUs> ContactUs { get; set; }

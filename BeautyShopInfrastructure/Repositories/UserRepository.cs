@@ -1,5 +1,6 @@
 ﻿using BeautyShopApplication.Utilities;
 using BeautyShopDomain.DTOs;
+using BeautyShopDomain.DTOs.AdminSide;
 using BeautyShopDomain.Entities.User;
 using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
@@ -39,5 +40,38 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users.FirstOrDefaultAsync(p=> p.MobileNumber==mobile && 
         p.Password == PasswordHasher.EncodePasswordMd5(password) && !p.IsDelete,cancellation);
+    }
+
+    public async Task<ICollection<UserDTO>?> GetUserDTOs(CancellationToken cancellation)
+    {
+        var userDTOs = await _context.Users.Where(p => !p.IsDelete).Select(p => new UserDTO() 
+        { Id = p.Id, CreateDate = p.CreateDate, MobileNumber = p.MobileNumber, Username = p.Username })
+            .ToListAsync(cancellation);
+
+        foreach (var userDTO in userDTOs)
+        {
+            userDTO.Roles = await _context.UserSelectedRoles.Where(p=> p.UserId==userDTO.Id && !p.IsDelete).Select(p=>p.Role.UniqueName).ToListAsync(cancellation);
+        }
+
+        return userDTOs;
+    }
+
+    public async Task<User?> GetUserById(int userId,CancellationToken cancellation)
+    {
+        return await _context.Users.FirstOrDefaultAsync(p => p.Id == userId && !p.IsDelete,cancellation);
+    }
+
+    public async Task<UserDTO?> GetUserDTOById(int userId, CancellationToken cancellation)
+    {
+        var userDTO = await _context.Users.Where(p => p.Id == userId && !p.IsDelete)
+            .Select(p => new UserDTO() { Id = p.Id, CreateDate = p.CreateDate, MobileNumber = p.MobileNumber, Username = p.Username })
+            .FirstOrDefaultAsync(cancellation);
+
+        if (userDTO == null) return null;
+
+        userDTO.Roles = await _context.UserSelectedRoles.Where(p => p.UserId == userDTO.Id && !p.IsDelete)
+            .Select(p => p.Role.UniqueName).ToListAsync(cancellation);
+
+        return userDTO;
     }
 }
