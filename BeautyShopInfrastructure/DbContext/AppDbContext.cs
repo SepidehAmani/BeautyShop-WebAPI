@@ -1,5 +1,6 @@
 ﻿using BeautyShopApplication.Utilities;
 using BeautyShopDomain.Entities.ContactUs;
+using BeautyShopDomain.Entities.Image;
 using BeautyShopDomain.Entities.Order;
 using BeautyShopDomain.Entities.Product;
 using BeautyShopDomain.Entities.User;
@@ -24,6 +25,8 @@ public class AppDbContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<UserSelectedRole> UserSelectedRoles { get; set; }
+    public DbSet<Image> Images { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder builder)

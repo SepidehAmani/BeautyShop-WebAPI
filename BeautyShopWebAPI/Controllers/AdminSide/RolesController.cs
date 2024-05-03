@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeautyShopWebAPI.Controllers.AdminSide
 {
-    [Route("api/Roles")]
+    [Route("api/Admin/Roles")]
     [ApiController]
     [Authorize(Roles ="Admin")]
     public class RolesController : ControllerBase

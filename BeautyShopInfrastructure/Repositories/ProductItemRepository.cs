@@ -16,7 +16,7 @@ public class ProductItemRepository : IProductItemRepository
     public async Task<ICollection<ProductItemDTO>?> GetProductItemDTOsByProductId(int productId,CancellationToken cancellation)
     {
         return await _context.ProductItems.Where(p => p.ProductId == productId && !p.IsDelete)
-            .Select(p => new ProductItemDTO() { Id = p.Id, Color = p.Color, Image = p.Image, Quantity = p.Quantity })
+            .Select(p => new ProductItemDTO() { Id = p.Id, Color = p.Color, Image = p.Image.Path, Quantity = p.Quantity })
             .ToListAsync(cancellation);
     }
 }

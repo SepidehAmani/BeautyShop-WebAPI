@@ -41,7 +41,23 @@ public class ProductRepository : IProductRepository
 
         return await products.Skip((requestDTO.PageNumber - 1) * requestDTO.PageSize)
             .Take(requestDTO.PageSize)
-            .Select(p => new ProductBoxDTO() { Id = p.Id, Name = p.Name, Price = p.Price, DiscountPercentage = p.DiscountPercentage, GeneralImage = p.GeneralImage })
+            .Select(p => new ProductBoxDTO() { Id = p.Id, Name = p.Name, Price = p.Price, DiscountPercentage = p.DiscountPercentage, GeneralImage = p.GeneralImage.Path })
             .ToListAsync(cancellation);
+    }
+
+
+    public void AddProduct(Product product)
+    {
+        _context.Products.Add(product);
+    }
+
+    public void UpdateProduct(Product product)
+    {
+        _context.Products.Update(product);
+    }
+
+    public async Task SaveChangesAsync(CancellationToken cancellation)
+    {
+        await _context.SaveChangesAsync(cancellation);
     }
 }
