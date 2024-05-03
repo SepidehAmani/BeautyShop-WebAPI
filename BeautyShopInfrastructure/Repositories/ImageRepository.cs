@@ -3,7 +3,6 @@ using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 
 namespace BeautyShopInfrastructure.Repositories;
 
@@ -30,7 +29,7 @@ public class ImageRepository : IImageRepository
         using var stream = new FileStream(filePath, FileMode.Create);
         await image.File.CopyToAsync(stream);
 
-        var urlFilePath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.PathBase}/Images/{image.Name}{image.Extension}";
+        var urlFilePath = $"/Images/{image.Name}{image.Extension}";
 
         image.Path = urlFilePath;
 
@@ -39,4 +38,6 @@ public class ImageRepository : IImageRepository
 
         return image;
     }
+
+    
 }

@@ -4,7 +4,8 @@ using BeautyShopDomain.DTOs.AdminSide;
 using BeautyShopDomain.Entities.Image;
 using BeautyShopDomain.Entities.Product;
 using BeautyShopDomain.RepositoryInterfaces;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace BeautyShopApplication.Services.Implement;
 
@@ -15,15 +16,20 @@ public class ProductService : IProductService
     private readonly IProductItemRepository _productItemRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IImageRepository _imageRepository;
+    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public ProductService(IProductRepository productRepository,IProductFeatureRepository productFeatureRepository,
-        IProductItemRepository productItemRepository,ICategoryRepository categoryRepository,IImageRepository imageRepository)
+        IProductItemRepository productItemRepository,ICategoryRepository categoryRepository,IImageRepository imageRepository,
+        IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
     {
         _productRepository = productRepository;
         _productFeatureRepository = productFeatureRepository;
         _productItemRepository = productItemRepository;
         _categoryRepository = categoryRepository;
         _imageRepository = imageRepository;
+        _webHostEnvironment = webHostEnvironment;
+        _httpContextAccessor = httpContextAccessor;
     }
 
 
@@ -104,7 +110,12 @@ public class ProductService : IProductService
             Price = productEntity.Price,
             DiscountPercentage = productEntity.DiscountPercentage,
             Name = productEntity.Name,
-            GeneralImagePath = imageEntity.Path
+            GeneralImagePath = GetFileURL(imageEntity.Path)
         };
+    }
+
+    private string GetFileURL(string filePath)
+    {
+        return $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.PathBase}{filePath}";
     }
 }
