@@ -16,20 +16,20 @@ public class ProductService : IProductService
     private readonly IProductItemRepository _productItemRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IImageRepository _imageRepository;
-    private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IFileService _fileService;
 
-    public ProductService(IProductRepository productRepository,IProductFeatureRepository productFeatureRepository,
-        IProductItemRepository productItemRepository,ICategoryRepository categoryRepository,IImageRepository imageRepository,
-        IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
+    public ProductService(IProductRepository productRepository, IProductFeatureRepository productFeatureRepository,
+        IProductItemRepository productItemRepository, ICategoryRepository categoryRepository, IImageRepository imageRepository,
+        IHttpContextAccessor httpContextAccessor, IFileService fileService)
     {
         _productRepository = productRepository;
         _productFeatureRepository = productFeatureRepository;
         _productItemRepository = productItemRepository;
         _categoryRepository = categoryRepository;
         _imageRepository = imageRepository;
-        _webHostEnvironment = webHostEnvironment;
         _httpContextAccessor = httpContextAccessor;
+        _fileService = fileService;
     }
 
 
@@ -43,7 +43,7 @@ public class ProductService : IProductService
             CategoryId = product.CategoryId,
             Description = product.Description,
             DiscountPercentage = product.DiscountPercentage,
-            GeneralImage = product.GeneralImage.Path,
+            GeneralImage = _fileService.GetFileURL(product.GeneralImage.Path),
             Id = product.Id,
             Name = product.Name,
             Price = product.Price,
@@ -62,31 +62,34 @@ public class ProductService : IProductService
         {
             return false;
         }
-        if(imageDTO.ImageFile.Length > 10485760)
+        if (imageDTO.ImageFile.Length > 10485760)
         {
             return false;
         }
         return true;
     }
 
-    public async Task<AdminSideProductDTO?> CreateProduct(CreateProductDTO productDTO,CancellationToken cancellation)
+    public async Task<AdminSideProductDTO?> CreateProduct(CreateProductDTO productDTO, CancellationToken cancellation)
     {
         var category = await _categoryRepository.GetCategoryById(productDTO.CategoryId, cancellation);
-        if(category == null || category.ParentId==null)
+        if (category == null || category.ParentId == null)
         {
             return null;
         }
 
-        var imageEntity = new Image()
-        {
-            File = productDTO.ImageDTO.ImageFile,
-            Extension = Path.GetExtension(productDTO.ImageDTO.ImageFile.FileName),
-            SizeInBytes = productDTO.ImageDTO.ImageFile.Length,
-            Name = productDTO.ImageDTO.Name,
-            Description = productDTO.ImageDTO.Description
-        };
+        var imageEntity = new Image();
 
-        await _imageRepository.UploadImage(imageEntity, cancellation);
+        if (productDTO.ImageDTO != null)
+        {
+            imageEntity.File = productDTO.ImageDTO.ImageFile;
+            imageEntity.Extension = Path.GetExtension(productDTO.ImageDTO.ImageFile.FileName);
+            imageEntity.SizeInBytes = productDTO.ImageDTO.ImageFile.Length;
+            imageEntity.Name = productDTO.ImageDTO.Name;
+            imageEntity.Description = productDTO.ImageDTO.Description;
+
+            await _imageRepository.UploadImage(imageEntity, cancellation);
+        }
+
 
         var productEntity = new Product()
         {
@@ -94,7 +97,7 @@ public class ProductService : IProductService
             Price = productDTO.Price,
             DiscountPercentage = productDTO.DiscountPercentage,
             Description = productDTO.Description,
-            GeneralImageId = imageEntity.Id,
+            GeneralImageId = (productDTO.ImageDTO != null) ? imageEntity.Id : null,
             CategoryId = productDTO.CategoryId
         };
 
@@ -110,12 +113,53 @@ public class ProductService : IProductService
             Price = productEntity.Price,
             DiscountPercentage = productEntity.DiscountPercentage,
             Name = productEntity.Name,
-            GeneralImagePath = GetFileURL(imageEntity.Path)
+            GeneralImagePath = (productDTO.ImageDTO != null) ? _fileService.GetFileURL(imageEntity.Path) : null
         };
     }
 
-    private string GetFileURL(string filePath)
+
+    public async Task<AdminSideProductDTO?> CreateProductItem(CreateProductItemDTO productItemDTO, int productId, CancellationToken cancellation)
     {
-        return $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.PathBase}{filePath}";
+        var product = await _productRepository.GetProductById(productId, cancellation);
+        if (product == null)  return null;
+
+        var imageEntity = new Image();
+
+        if (productItemDTO.ImageDTO != null)
+        {
+            imageEntity.File = productItemDTO.ImageDTO.ImageFile;
+            imageEntity.Extension = Path.GetExtension(productItemDTO.ImageDTO.ImageFile.FileName);
+            imageEntity.SizeInBytes = productItemDTO.ImageDTO.ImageFile.Length;
+            imageEntity.Name = productItemDTO.ImageDTO.Name;
+            imageEntity.Description = productItemDTO.ImageDTO.Description;
+
+            await _imageRepository.UploadImage(imageEntity, cancellation);
+        }
+
+
+        var productItemEntity = new ProductItem()
+        {
+            Color = productItemDTO.Color,
+            Quantity = productItemDTO.Quantity,
+            ImageId = (productItemDTO.ImageDTO != null) ? imageEntity.Id : null,
+            ProductId = productId
+        };
+
+        _productItemRepository.AddProductItem(productItemEntity);
+        await _productItemRepository.SaveChangesAsync(cancellation);
+
+
+        return new AdminSideProductDTO()
+        {
+            Id = product.Id,
+            CategoryId = product.CategoryId,
+            Description = product.Description,
+            Price = product.Price,
+            DiscountPercentage = product.DiscountPercentage,
+            Name = product.Name,
+            GeneralImagePath = (productItemDTO.ImageDTO != null) ? _fileService.GetFileURL(imageEntity.Path) : null,
+            ProductItems = await _productItemRepository.GetProductItemDTOsByProductId(productId, cancellation),
+            ProductFeatures = await _productFeatureRepository.GetProductFeatureDTOsByProductId(productId, cancellation)
+        };
     }
 }

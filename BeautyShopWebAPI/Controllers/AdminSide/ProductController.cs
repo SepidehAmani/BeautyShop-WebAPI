@@ -37,5 +37,25 @@ namespace BeautyShopWebAPI.Controllers.AdminSide
 
             return Ok(model);
         }
+
+        [HttpPost("{productId}")]
+        public async Task<ActionResult> CreateProductItem([FromForm] CreateProductItemDTO productItemDTO,int productId,CancellationToken cancellation=default)
+        {
+            if (productItemDTO.ImageDTO != null)
+            {
+                var imageValidation = _productService.ValidateImageFile(productItemDTO.ImageDTO);
+                if (!imageValidation)
+                {
+                    ModelState.AddModelError("Image", "there is a problem with Image size or extension");
+                }
+            }
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var model = await _productService.CreateProductItem(productItemDTO,productId, cancellation);
+            if(model==null) return BadRequest();
+
+            return Ok(model);
+        }
     }
 }

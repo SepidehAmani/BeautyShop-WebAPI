@@ -10,4 +10,5 @@ public interface IProductRepository
     void AddProduct(Product product);
     void UpdateProduct(Product product);
     Task SaveChangesAsync(CancellationToken cancellation);
+    Task<bool> ProductExistsWithId(int id, CancellationToken cancellation);
 }
