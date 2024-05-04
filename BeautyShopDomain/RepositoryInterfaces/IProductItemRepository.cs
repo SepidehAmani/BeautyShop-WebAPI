@@ -10,4 +10,6 @@ public interface IProductItemRepository
     void AddProductItem(ProductItem item);
     void UpdateProductItem(ProductItem item);
     Task SaveChangesAsync(CancellationToken cancellation);
+    Task<bool> ProductItemExistsWithId(int productItemId, CancellationToken cancellation);
+    Task<ProductItem?> GetProductItemById(int id, CancellationToken cancellation);
 }

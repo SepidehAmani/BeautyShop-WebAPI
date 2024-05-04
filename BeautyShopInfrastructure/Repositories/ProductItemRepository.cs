@@ -40,4 +40,15 @@ public class ProductItemRepository : IProductItemRepository
     {
         await _context.SaveChangesAsync(cancellation);
     }
+
+
+    public async Task<bool> ProductItemExistsWithId(int productItemId,CancellationToken cancellation)
+    {
+        return await _context.ProductItems.AnyAsync(p => p.Id == productItemId && !p.IsDelete);
+    }
+
+    public async Task<ProductItem?> GetProductItemById(int id,CancellationToken cancellation)
+    {
+        return await _context.ProductItems.Where(p => p.Id == id && !p.IsDelete).FirstOrDefaultAsync(cancellation);
+    }
 }
