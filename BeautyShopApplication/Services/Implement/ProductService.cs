@@ -15,18 +15,15 @@ public class ProductService : IProductService
     private readonly IProductItemRepository _productItemRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IImageService _imageService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public ProductService(IProductRepository productRepository, IProductFeatureRepository productFeatureRepository,
-        IProductItemRepository productItemRepository, ICategoryRepository categoryRepository, IImageService imageService,
-        IHttpContextAccessor httpContextAccessor)
+        IProductItemRepository productItemRepository, ICategoryRepository categoryRepository, IImageService imageService)
     {
         _productRepository = productRepository;
         _productFeatureRepository = productFeatureRepository;
         _productItemRepository = productItemRepository;
         _categoryRepository = categoryRepository;
         _imageService = imageService;
-        _httpContextAccessor = httpContextAccessor;
     }
 
 
@@ -40,7 +37,7 @@ public class ProductService : IProductService
             CategoryId = product.CategoryId,
             Description = product.Description,
             DiscountPercentage = product.DiscountPercentage,
-            GeneralImage = product.GeneralImage.Path,
+            GeneralImage = product.GeneralImage!=null? product.GeneralImage.Path : null,
             Id = product.Id,
             Name = product.Name,
             Price = product.Price,
@@ -76,12 +73,12 @@ public class ProductService : IProductService
 
         var imageEntity = new Image();
 
-        if (productDTO.ImageDTO != null)
+        if (productDTO.ImageDTO != null && productDTO.ImageDTO.ImageFile != null)
         {
             imageEntity.File = productDTO.ImageDTO.ImageFile;
             imageEntity.Extension = Path.GetExtension(productDTO.ImageDTO.ImageFile.FileName);
             imageEntity.SizeInBytes = productDTO.ImageDTO.ImageFile.Length;
-            imageEntity.Name = productDTO.ImageDTO.Name;
+            imageEntity.Name = productDTO.ImageDTO.Name!=null? productDTO.ImageDTO.Name : "Untitled";
             imageEntity.Description = productDTO.ImageDTO.Description;
 
             await _imageService.UploadImage(imageEntity, cancellation);
@@ -94,7 +91,7 @@ public class ProductService : IProductService
             Price = productDTO.Price,
             DiscountPercentage = productDTO.DiscountPercentage,
             Description = productDTO.Description,
-            GeneralImageId = (productDTO.ImageDTO != null) ? imageEntity.Id : null,
+            GeneralImageId = (productDTO.ImageDTO != null && productDTO.ImageDTO.ImageFile != null) ? imageEntity.Id : null,
             CategoryId = productDTO.CategoryId
         };
 
@@ -110,7 +107,7 @@ public class ProductService : IProductService
             Price = productEntity.Price,
             DiscountPercentage = productEntity.DiscountPercentage,
             Name = productEntity.Name,
-            GeneralImagePath = (productDTO.ImageDTO != null) ? imageEntity.Path : null
+            GeneralImagePath = productEntity.GeneralImage?.Path
         };
     }
 
@@ -122,12 +119,12 @@ public class ProductService : IProductService
 
         var imageEntity = new Image();
 
-        if (productItemDTO.ImageDTO != null)
+        if (productItemDTO.ImageDTO != null && productItemDTO.ImageDTO.ImageFile != null)
         {
             imageEntity.File = productItemDTO.ImageDTO.ImageFile;
             imageEntity.Extension = Path.GetExtension(productItemDTO.ImageDTO.ImageFile.FileName);
             imageEntity.SizeInBytes = productItemDTO.ImageDTO.ImageFile.Length;
-            imageEntity.Name = productItemDTO.ImageDTO.Name;
+            imageEntity.Name = productItemDTO.ImageDTO.Name!=null? productItemDTO.ImageDTO.Name : "Untitled";
             imageEntity.Description = productItemDTO.ImageDTO.Description;
 
             await _imageService.UploadImage(imageEntity, cancellation);
@@ -138,7 +135,7 @@ public class ProductService : IProductService
         {
             Color = productItemDTO.Color,
             Quantity = productItemDTO.Quantity,
-            ImageId = (productItemDTO.ImageDTO != null) ? imageEntity.Id : null,
+            ImageId = (productItemDTO.ImageDTO != null && productItemDTO.ImageDTO.ImageFile != null) ? imageEntity.Id : null,
             ProductId = productId
         };
 
@@ -154,7 +151,7 @@ public class ProductService : IProductService
             Price = product.Price,
             DiscountPercentage = product.DiscountPercentage,
             Name = product.Name,
-            GeneralImagePath = (product.GeneralImage != null) ? product.GeneralImage.Path : null,
+            GeneralImagePath = product.GeneralImage?.Path,
             ProductItems = await _productItemRepository.GetProductItemDTOsByProductId(productId, cancellation),
             ProductFeatures = await _productFeatureRepository.GetProductFeatureDTOsByProductId(productId, cancellation)
         };

@@ -11,6 +11,7 @@ public class CreateProductDTO
     public string Name { get; set; }
     [Required]
     public int Price { get; set; }
+    [Required]
     [Range(0,100)]
     public int DiscountPercentage { get; set; }
     public string? Description { get; set; }

@@ -21,7 +21,7 @@ namespace BeautyShopWebAPI.Controllers.AdminSide
         [HttpPost("Create")]
         public async Task<ActionResult> CreateProduct([FromForm] CreateProductDTO createProductDTO,CancellationToken cancellation=default)
         {
-            if(createProductDTO.ImageDTO != null) 
+            if(createProductDTO.ImageDTO != null && createProductDTO.ImageDTO.ImageFile != null) 
             {
                 var imageValidation = _productService.ValidateImageFile(createProductDTO.ImageDTO);
                 if (!imageValidation)
@@ -42,7 +42,7 @@ namespace BeautyShopWebAPI.Controllers.AdminSide
         [HttpPost("{productId}/AddItem")]
         public async Task<ActionResult> CreateProductItem([FromForm] CreateProductItemDTO productItemDTO,int productId,CancellationToken cancellation=default)
         {
-            if (productItemDTO.ImageDTO != null)
+            if (productItemDTO.ImageDTO != null && productItemDTO.ImageDTO.ImageFile != null)
             {
                 var imageValidation = _productService.ValidateImageFile(productItemDTO.ImageDTO);
                 if (!imageValidation)
