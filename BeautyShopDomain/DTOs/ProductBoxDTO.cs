@@ -6,5 +6,5 @@ public class ProductBoxDTO
     public string Name { get; set; }
     public int Price { get; set; }
     public int DiscountPercentage { get; set; }
-    public string? GeneralImageURL { get; set; }
+    public string? GeneralImagePath { get; set; }
 }

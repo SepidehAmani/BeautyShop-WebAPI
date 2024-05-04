@@ -2,7 +2,6 @@
 using BeautyShopDomain.Entities.Product;
 using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeautyShopInfrastructure.Repositories;
@@ -10,17 +9,15 @@ namespace BeautyShopInfrastructure.Repositories;
 public class ProductItemRepository : IProductItemRepository
 {
     private readonly AppDbContext _context;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public ProductItemRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+    public ProductItemRepository(AppDbContext context)
     {
         _context = context;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<ICollection<ProductItemDTO>?> GetProductItemDTOsByProductId(int productId,CancellationToken cancellation)
     {
         return await _context.ProductItems.Where(p => p.ProductId == productId && !p.IsDelete)
-            .Select(p => new ProductItemDTO() { Id = p.Id, Color = p.Color, ImageURL = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.PathBase}{p.Image.Path}", Quantity = p.Quantity })
+            .Select(p => new ProductItemDTO() { Id = p.Id, Color = p.Color, ImagePath = p.Image.Path, Quantity = p.Quantity })
             .ToListAsync(cancellation);
     }
 

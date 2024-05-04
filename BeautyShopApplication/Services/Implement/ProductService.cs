@@ -4,9 +4,7 @@ using BeautyShopDomain.DTOs.AdminSide;
 using BeautyShopDomain.Entities.Image;
 using BeautyShopDomain.Entities.Product;
 using BeautyShopDomain.RepositoryInterfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using System.Runtime.CompilerServices;
 
 namespace BeautyShopApplication.Services.Implement;
 
@@ -16,21 +14,19 @@ public class ProductService : IProductService
     private readonly IProductFeatureRepository _productFeatureRepository;
     private readonly IProductItemRepository _productItemRepository;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly IImageRepository _imageRepository;
+    private readonly IImageService _imageService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IFileService _fileService;
 
     public ProductService(IProductRepository productRepository, IProductFeatureRepository productFeatureRepository,
-        IProductItemRepository productItemRepository, ICategoryRepository categoryRepository, IImageRepository imageRepository,
-        IHttpContextAccessor httpContextAccessor, IFileService fileService)
+        IProductItemRepository productItemRepository, ICategoryRepository categoryRepository, IImageService imageService,
+        IHttpContextAccessor httpContextAccessor)
     {
         _productRepository = productRepository;
         _productFeatureRepository = productFeatureRepository;
         _productItemRepository = productItemRepository;
         _categoryRepository = categoryRepository;
-        _imageRepository = imageRepository;
+        _imageService = imageService;
         _httpContextAccessor = httpContextAccessor;
-        _fileService = fileService;
     }
 
 
@@ -44,7 +40,7 @@ public class ProductService : IProductService
             CategoryId = product.CategoryId,
             Description = product.Description,
             DiscountPercentage = product.DiscountPercentage,
-            GeneralImage = _fileService.GetFileURL(product.GeneralImage.Path),
+            GeneralImage = product.GeneralImage.Path,
             Id = product.Id,
             Name = product.Name,
             Price = product.Price,
@@ -88,7 +84,7 @@ public class ProductService : IProductService
             imageEntity.Name = productDTO.ImageDTO.Name;
             imageEntity.Description = productDTO.ImageDTO.Description;
 
-            await _imageRepository.UploadImage(imageEntity, cancellation);
+            await _imageService.UploadImage(imageEntity, cancellation);
         }
 
 
@@ -114,7 +110,7 @@ public class ProductService : IProductService
             Price = productEntity.Price,
             DiscountPercentage = productEntity.DiscountPercentage,
             Name = productEntity.Name,
-            GeneralImagePath = (productDTO.ImageDTO != null) ? _fileService.GetFileURL(imageEntity.Path) : null
+            GeneralImagePath = (productDTO.ImageDTO != null) ? imageEntity.Path : null
         };
     }
 
@@ -134,7 +130,7 @@ public class ProductService : IProductService
             imageEntity.Name = productItemDTO.ImageDTO.Name;
             imageEntity.Description = productItemDTO.ImageDTO.Description;
 
-            await _imageRepository.UploadImage(imageEntity, cancellation);
+            await _imageService.UploadImage(imageEntity, cancellation);
         }
 
 
@@ -158,7 +154,7 @@ public class ProductService : IProductService
             Price = product.Price,
             DiscountPercentage = product.DiscountPercentage,
             Name = product.Name,
-            GeneralImagePath = (product.GeneralImage != null) ? _fileService.GetFileURL(product.GeneralImage.Path) : null,
+            GeneralImagePath = (product.GeneralImage != null) ? product.GeneralImage.Path : null,
             ProductItems = await _productItemRepository.GetProductItemDTOsByProductId(productId, cancellation),
             ProductFeatures = await _productFeatureRepository.GetProductFeatureDTOsByProductId(productId, cancellation)
         };
@@ -189,7 +185,7 @@ public class ProductService : IProductService
             Price = product.Price,
             DiscountPercentage = product.DiscountPercentage,
             Name = product.Name,
-            GeneralImagePath = (product.GeneralImage != null) ? _fileService.GetFileURL(product.GeneralImage.Path) : null,
+            GeneralImagePath = (product.GeneralImage != null) ? product.GeneralImage.Path : null,
             ProductItems = await _productItemRepository.GetProductItemDTOsByProductId(productId, cancellation),
             ProductFeatures = await _productFeatureRepository.GetProductFeatureDTOsByProductId(productId, cancellation)
         };

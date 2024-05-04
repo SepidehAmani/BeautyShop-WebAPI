@@ -4,5 +4,6 @@ namespace BeautyShopDomain.RepositoryInterfaces;
 
 public interface IImageRepository
 {
-    Task<Image> UploadImage(Image image, CancellationToken cancellation);
+    void AddImage(Image image);
+    Task SaveChangesAsync(CancellationToken cancellation);
 }

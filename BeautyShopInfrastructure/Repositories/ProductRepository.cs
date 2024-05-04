@@ -44,7 +44,7 @@ public class ProductRepository : IProductRepository
 
         return await products.Skip((requestDTO.PageNumber - 1) * requestDTO.PageSize)
             .Take(requestDTO.PageSize)
-            .Select(p => new ProductBoxDTO() { Id = p.Id, Name = p.Name, Price = p.Price, DiscountPercentage = p.DiscountPercentage, GeneralImageURL = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.PathBase}{p.GeneralImage.Path}" })
+            .Select(p => new ProductBoxDTO() { Id = p.Id, Name = p.Name, Price = p.Price, DiscountPercentage = p.DiscountPercentage, GeneralImagePath = p.GeneralImage.Path })
             .ToListAsync(cancellation);
     }
 
