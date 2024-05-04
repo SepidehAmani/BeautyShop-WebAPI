@@ -18,7 +18,7 @@ namespace BeautyShopWebAPI.Controllers.AdminSide
         }
 
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<ActionResult> CreateProduct([FromForm] CreateProductDTO createProductDTO,CancellationToken cancellation=default)
         {
             if(createProductDTO.ImageDTO != null) 
@@ -38,7 +38,8 @@ namespace BeautyShopWebAPI.Controllers.AdminSide
             return Ok(model);
         }
 
-        [HttpPost("{productId}")]
+
+        [HttpPost("{productId}/AddItem")]
         public async Task<ActionResult> CreateProductItem([FromForm] CreateProductItemDTO productItemDTO,int productId,CancellationToken cancellation=default)
         {
             if (productItemDTO.ImageDTO != null)
@@ -53,7 +54,19 @@ namespace BeautyShopWebAPI.Controllers.AdminSide
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var model = await _productService.CreateProductItem(productItemDTO,productId, cancellation);
-            if(model==null) return BadRequest();
+            if(model==null) return NotFound();
+
+            return Ok(model);
+        }
+
+
+        [HttpPost("{productId}/AddFeature")]
+        public async Task<ActionResult> CreateProductFeature(CreateProductFeatureDTO featureDTO,int productId,CancellationToken cancellation=default)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var model = await _productService.CreateProductFeature(featureDTO,productId, cancellation);
+            if (model == null) return NotFound("There is no Product with this Id");
 
             return Ok(model);
         }

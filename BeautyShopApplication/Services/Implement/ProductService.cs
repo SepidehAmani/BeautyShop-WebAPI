@@ -6,6 +6,7 @@ using BeautyShopDomain.Entities.Product;
 using BeautyShopDomain.RepositoryInterfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using System.Runtime.CompilerServices;
 
 namespace BeautyShopApplication.Services.Implement;
 
@@ -157,7 +158,38 @@ public class ProductService : IProductService
             Price = product.Price,
             DiscountPercentage = product.DiscountPercentage,
             Name = product.Name,
-            GeneralImagePath = (productItemDTO.ImageDTO != null) ? _fileService.GetFileURL(imageEntity.Path) : null,
+            GeneralImagePath = (product.GeneralImage != null) ? _fileService.GetFileURL(product.GeneralImage.Path) : null,
+            ProductItems = await _productItemRepository.GetProductItemDTOsByProductId(productId, cancellation),
+            ProductFeatures = await _productFeatureRepository.GetProductFeatureDTOsByProductId(productId, cancellation)
+        };
+    }
+
+
+    public async Task<AdminSideProductDTO?> CreateProductFeature(CreateProductFeatureDTO featureDTO,int productId,CancellationToken cancellation)
+    {
+        var product = await _productRepository.GetProductById(productId, cancellation);
+        if (product == null) return null;
+
+        var productFeatureEntity = new ProductFeature()
+        {
+            Title= featureDTO.Title,
+            Description = featureDTO.Description,
+            ProductId = productId
+        };
+
+        _productFeatureRepository.AddProductFeature(productFeatureEntity);
+        await _productFeatureRepository.SaveChangesAsync(cancellation);
+
+
+        return new AdminSideProductDTO()
+        {
+            Id = product.Id,
+            CategoryId = product.CategoryId,
+            Description = product.Description,
+            Price = product.Price,
+            DiscountPercentage = product.DiscountPercentage,
+            Name = product.Name,
+            GeneralImagePath = (product.GeneralImage != null) ? _fileService.GetFileURL(product.GeneralImage.Path) : null,
             ProductItems = await _productItemRepository.GetProductItemDTOsByProductId(productId, cancellation),
             ProductFeatures = await _productFeatureRepository.GetProductFeatureDTOsByProductId(productId, cancellation)
         };

@@ -9,4 +9,5 @@ public interface IProductService
     bool ValidateImageFile(CreateImageDTO imageDTO);
     Task<AdminSideProductDTO?> CreateProduct(CreateProductDTO productDTO, CancellationToken cancellation);
     Task<AdminSideProductDTO?> CreateProductItem(CreateProductItemDTO productItemDTO, int productId, CancellationToken cancellation);
+    Task<AdminSideProductDTO?> CreateProductFeature(CreateProductFeatureDTO featureDTO, int productId, CancellationToken cancellation);
 }
