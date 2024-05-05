@@ -33,7 +33,7 @@ public class OrderController : ControllerBase
     }
 
 
-    [HttpPost("RemoveItemFromShopCard/{orderItemId}")]
+    [HttpDelete("RemoveItemFromShopCard/{orderItemId}")]
     public async Task<ActionResult> RemoveItemFromShopCard(int orderItemId,CancellationToken cancellation=default)
     {
         var userId = User.GetUserId();
@@ -44,7 +44,7 @@ public class OrderController : ControllerBase
     }
 
 
-    [HttpGet("ShopCard")]
+    [HttpGet("CurrentShopCard")]
     public async Task<ActionResult> GetShopCard(CancellationToken cancellation=default)
     {
         var userId = User.GetUserId();
@@ -54,7 +54,7 @@ public class OrderController : ControllerBase
     }
 
 
-    [HttpGet("RemoveShopCard")]
+    [HttpDelete("RemoveShopCard")]
     public async Task<ActionResult> RemoveShopCard(CancellationToken cancellation=default)
     {
         var userId = User.GetUserId();
@@ -64,7 +64,7 @@ public class OrderController : ControllerBase
     }
 
 
-    [HttpPost("PayShopCard")]
+    [HttpPost("PayCurrentShopCard")]
     public async Task<ActionResult> PayShopCard(AddressDTO addressDTO,CancellationToken cancellation=default)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -75,7 +75,7 @@ public class OrderController : ControllerBase
     }
 
 
-    [HttpGet("OrderPayed/{orderId}")]
+    [HttpGet("MakeOrderPayed/{orderId}")]
     public async Task<ActionResult> OrderPayed(int orderId,CancellationToken cancellation=default)
     {
         var userId = User.GetUserId();

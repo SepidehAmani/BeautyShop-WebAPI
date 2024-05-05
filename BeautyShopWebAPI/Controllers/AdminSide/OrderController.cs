@@ -19,7 +19,7 @@ namespace BeautyShopWebAPI.Controllers.AdminSide
 
 
 
-        [HttpGet]
+        [HttpGet("ListOfPayedOrders")]
         public async Task<ActionResult> GetListOfPayedOrders(CancellationToken cancellation=default)
         {
             var model = await _orderService.GetListOfPayedOrders(cancellation);
@@ -27,7 +27,7 @@ namespace BeautyShopWebAPI.Controllers.AdminSide
         }
 
 
-        [HttpGet("{OrderId}")]
+        [HttpGet("PayedOrderDetail/{OrderId}")]
         public async Task<ActionResult> GetPayedOrderInDetail(int OrderId,CancellationToken cancellation)
         {
             var model = await _orderService.GetPayedOrderInDetail(OrderId, cancellation);
