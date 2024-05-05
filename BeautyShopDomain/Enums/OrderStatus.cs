@@ -4,5 +4,6 @@ public enum OrderStatus
 {
     Open,
     Closed,
-    Payed
+    Payed,
+    Shipped
 }

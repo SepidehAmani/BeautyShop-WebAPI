@@ -113,4 +113,33 @@ public class OrderService : IOrderService
         await _orderRepository.SaveChangesAsync(cancellation);
         return true;
     }
+
+
+    public async Task<bool> PayShopCard(int userId,CancellationToken cancellation)
+    {
+        var openOrder = await _orderRepository.GetOpenOrderByUserId(userId, cancellation);
+        if (openOrder == null) return false;
+
+        var itemsCount = await _orderItemRepository.GetCountOfCurrentShopItems(openOrder.Id, cancellation);
+        if (itemsCount == 0) return false;
+
+        openOrder.Status = OrderStatus.Closed;
+        _orderRepository.UpdateOrder(openOrder);
+        await _orderRepository.SaveChangesAsync(cancellation);
+
+        return true;
+    }
+
+
+    public async Task<bool> OrderPayed(int orderId,int userId,CancellationToken cancellation)
+    {
+        var order = await _orderRepository.GetClosedOrderById(orderId, cancellation);
+        if(order == null) return false;
+        if(order.UserId != userId) return false;
+
+        order.Status = OrderStatus.Payed;
+        _orderRepository.UpdateOrder(order);
+        await _orderRepository.SaveChangesAsync(cancellation);
+        return true;
+    }
 }

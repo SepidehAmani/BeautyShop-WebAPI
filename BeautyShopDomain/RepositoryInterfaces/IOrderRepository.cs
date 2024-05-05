@@ -8,4 +8,5 @@ public interface IOrderRepository
     void AddOrder(Order order);
     void UpdateOrder(Order order);
     Task SaveChangesAsync(CancellationToken cancellation);
+    Task<Order?> GetClosedOrderById(int orderId, CancellationToken cancellation);
 }

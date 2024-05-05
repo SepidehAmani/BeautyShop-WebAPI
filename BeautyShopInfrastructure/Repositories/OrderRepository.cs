@@ -35,4 +35,10 @@ public class OrderRepository : IOrderRepository
     {
         await _context.SaveChangesAsync(cancellation);
     }
+
+
+    public async Task<Order?> GetClosedOrderById(int orderId,CancellationToken cancellation)
+    {
+        return await _context.Orders.FirstOrDefaultAsync(p => p.Id == orderId && p.Status == OrderStatus.Closed && !p.IsDelete, cancellation);
+    }
 }

@@ -8,4 +8,6 @@ public interface IOrderService
     Task<ShowShopCardDTO?> GetShopCard(int userId, CancellationToken cancellation);
     Task<bool> RemoveItemFromShopCard(int orderItemId, int userId, CancellationToken cancellation);
     Task<bool> RemoveShopCard(int userId, CancellationToken cancellation);
+    Task<bool> PayShopCard(int userId, CancellationToken cancellation);
+    Task<bool> OrderPayed(int orderId, int userId, CancellationToken cancellation);
 }
