@@ -12,6 +12,7 @@ public class Order : BaseEntity
     public string? PostalCode { get; set; }
     public OrderStatus Status { get; set; } = OrderStatus.Open;
     public bool IsDelete { get; set; }
+    public bool IsSeen { get; set; }
 
 
     public User.User? User { get; set; }

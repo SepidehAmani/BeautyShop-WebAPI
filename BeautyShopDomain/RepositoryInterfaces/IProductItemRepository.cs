@@ -12,4 +12,5 @@ public interface IProductItemRepository
     Task SaveChangesAsync(CancellationToken cancellation);
     Task<bool> ProductItemExistsWithId(int productItemId, CancellationToken cancellation);
     Task<ProductItem?> GetProductItemById(int id, CancellationToken cancellation);
+    Task<ProductItem?> GetProductItemWithProductById(int id, CancellationToken cancellation);
 }

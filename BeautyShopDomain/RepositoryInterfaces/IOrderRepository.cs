@@ -9,4 +9,7 @@ public interface IOrderRepository
     void UpdateOrder(Order order);
     Task SaveChangesAsync(CancellationToken cancellation);
     Task<Order?> GetClosedOrderById(int orderId, CancellationToken cancellation);
+    Task<ICollection<Order>?> GetListOfPayedOrders(CancellationToken cancellation);
+    Task<Order?> GetOrderWithItemsById(int orderId, CancellationToken cancellation);
+    Task<Order?> GetOrderById(int orderId, CancellationToken cancellation);
 }

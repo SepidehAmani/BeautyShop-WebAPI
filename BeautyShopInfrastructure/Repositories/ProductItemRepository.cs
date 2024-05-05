@@ -51,4 +51,9 @@ public class ProductItemRepository : IProductItemRepository
     {
         return await _context.ProductItems.Where(p => p.Id == id && !p.IsDelete).FirstOrDefaultAsync(cancellation);
     }
+
+    public async Task<ProductItem?> GetProductItemWithProductById(int id, CancellationToken cancellation)
+    {
+        return await _context.ProductItems.Where(p => p.Id == id && !p.IsDelete).Include(p=> p.Product).FirstOrDefaultAsync(cancellation);
+    }
 }

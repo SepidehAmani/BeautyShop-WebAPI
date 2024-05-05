@@ -1,4 +1,5 @@
-﻿using BeautyShopDomain.Entities.Order;
+﻿using BeautyShopDomain.DTOs.AdminSide;
+using BeautyShopDomain.Entities.Order;
 using BeautyShopDomain.Enums;
 using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
@@ -40,5 +41,25 @@ public class OrderRepository : IOrderRepository
     public async Task<Order?> GetClosedOrderById(int orderId,CancellationToken cancellation)
     {
         return await _context.Orders.FirstOrDefaultAsync(p => p.Id == orderId && p.Status == OrderStatus.Closed && !p.IsDelete, cancellation);
+    }
+
+
+    public async Task<ICollection<Order>?> GetListOfPayedOrders(CancellationToken cancellation)
+    {
+        return await _context.Orders
+            .Where(p => !p.IsDelete && (p.Status == OrderStatus.Payed || p.Status == OrderStatus.Shipped))
+            .ToListAsync(cancellation);
+    }
+
+
+    public async Task<Order?> GetOrderWithItemsById(int orderId,CancellationToken cancellation)
+    {
+        return await _context.Orders.Where(p => p.Id == orderId && !p.IsDelete)
+            .Include(p => p.OrderItems).FirstOrDefaultAsync(cancellation);
+    }
+
+    public async Task<Order?> GetOrderById(int orderId, CancellationToken cancellation)
+    {
+        return await _context.Orders.Where(p => p.Id == orderId && !p.IsDelete).FirstOrDefaultAsync(cancellation);
     }
 }

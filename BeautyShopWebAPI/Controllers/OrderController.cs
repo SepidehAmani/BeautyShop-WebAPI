@@ -23,6 +23,7 @@ public class OrderController : ControllerBase
     [HttpPost("AddItemToShopCard")]
     public async Task<ActionResult> AddItemToShopCard(AddToShopCardDTO addToShopCardDTO,CancellationToken cancellation=default)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         var userId = User.GetUserId();
         
         var result = await _orderService.AddItemToShopCard(addToShopCardDTO, userId, cancellation);
@@ -58,17 +59,18 @@ public class OrderController : ControllerBase
     {
         var userId = User.GetUserId();
         var result = await _orderService.RemoveShopCard(userId, cancellation);
-        if (!result) return NotFound();
+        if (!result) return NotFound("There is no open Order");
         return Ok("ShopCard was removed successfully");
     }
 
 
-    [HttpGet("PayShopCard")]
-    public async Task<ActionResult> PayShopCard(CancellationToken cancellation=default)
+    [HttpPost("PayShopCard")]
+    public async Task<ActionResult> PayShopCard(AddressDTO addressDTO,CancellationToken cancellation=default)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         var userId = User.GetUserId();
-        var result = await _orderService.PayShopCard(userId, cancellation);
-        if(!result) return NotFound();
+        var result = await _orderService.PayShopCard(userId,addressDTO, cancellation);
+        if (!result) return BadRequest();
         return Ok("ShopCard was closed successfully");
     }
 
