@@ -39,4 +39,10 @@ public class CategoryService : ICategoryService
 
         return await _productRepository.GetProductBoxDTOsByCategoryIds(categoryIdsToSearch, requestDTO, cancellation);
     }
+
+
+    public async Task<ICollection<ParentCatgeoryDTO>?> GetListOfCategoryDTOs(CancellationToken cancellation)
+    {
+        return await _categoryRepository.GetListOfCategoryDTOs(cancellation);
+    }
 }

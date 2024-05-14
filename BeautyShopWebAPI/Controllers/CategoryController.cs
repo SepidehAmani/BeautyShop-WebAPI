@@ -23,5 +23,12 @@ namespace BeautyShopWebAPI.Controllers
             if (model == null) return NotFound();
             return Ok(model);
         }
+
+
+        [HttpGet("Categories")]
+        public async Task<ActionResult> GetListOfCategories(CancellationToken cancellation=default)
+        {
+            return Ok(await _categoryService.GetListOfCategoryDTOs(cancellation));
+        }
     }
 }
