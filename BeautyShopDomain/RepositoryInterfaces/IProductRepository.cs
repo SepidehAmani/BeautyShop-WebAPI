@@ -11,4 +11,6 @@ public interface IProductRepository
     void UpdateProduct(Product product);
     Task SaveChangesAsync(CancellationToken cancellation);
     Task<bool> ProductExistsWithId(int id, CancellationToken cancellation);
+    Task<ICollection<ProductBoxDTO>> GetListOfProductDTOs(string? searchString, ProductListRequestDTO requestDTO,
+            CancellationToken cancellation);
 }

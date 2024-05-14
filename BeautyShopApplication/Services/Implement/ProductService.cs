@@ -187,4 +187,12 @@ public class ProductService : IProductService
             ProductFeatures = await _productFeatureRepository.GetProductFeatureDTOsByProductId(productId, cancellation)
         };
     }
+
+
+
+    public async Task<ICollection<ProductBoxDTO>> GetListOfProductDTOs(string? searchString, ProductListRequestDTO requestDTO,
+            CancellationToken cancellation)
+    {
+        return await _productRepository.GetListOfProductDTOs(searchString,requestDTO, cancellation);
+    }
 }
