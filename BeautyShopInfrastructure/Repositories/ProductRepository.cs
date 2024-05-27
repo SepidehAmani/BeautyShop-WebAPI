@@ -10,11 +10,9 @@ namespace BeautyShopInfrastructure.Repositories;
 public class ProductRepository : IProductRepository
 {
     private readonly AppDbContext _context;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public ProductRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+    public ProductRepository(AppDbContext context)
     {
         _context = context;
-        _httpContextAccessor = httpContextAccessor;
     }
 
 
