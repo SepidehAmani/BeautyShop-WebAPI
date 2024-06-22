@@ -23,7 +23,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<ICollection<ProductBoxDTO>?> GetProductBoxDTOsByCategoryIds(List<int> categoryIds,CategoryPageRequestDTO requestDTO,CancellationToken cancellation)
     {
-        var products = _context.Products.Where(p => categoryIds.Contains(p.CategoryId) && !p.IsDelete).AsQueryable();
+        var products = _context.DiscountedProducts.Where(p => categoryIds.Contains(p.CategoryId) && !p.IsDelete).AsQueryable();
 
         switch (requestDTO.Order)
         {
@@ -31,10 +31,10 @@ public class ProductRepository : IProductRepository
                 products = products.OrderByDescending(p => p.Id).AsQueryable();
                 break;
             case "Cheapest":
-                products = products.OrderBy(p=> p.Price).AsQueryable();
+                products = products.OrderBy(p=> p.FinalPrice).AsQueryable();
                 break;
             case "MostExpensive":
-                products = products.OrderByDescending(p => p.Price).AsQueryable();
+                products = products.OrderByDescending(p => p.FinalPrice).AsQueryable();
                 break;
             default:
                 break;
@@ -71,7 +71,7 @@ public class ProductRepository : IProductRepository
     public async Task<ICollection<ProductBoxDTO>> GetListOfProductDTOs(string? searchString, ProductListRequestDTO requestDTO,
             CancellationToken cancellation)
     {
-        var products = _context.Products.AsQueryable();
+        var products = _context.DiscountedProducts.AsQueryable();
 
         if (searchString != null)
         {
@@ -88,10 +88,10 @@ public class ProductRepository : IProductRepository
                 products = products.OrderByDescending(p => p.Id).AsQueryable();
                 break;
             case "Cheapest":
-                products = products.OrderBy(p => p.Price).AsQueryable();
+                products = products.OrderBy(p => p.FinalPrice).AsQueryable();
                 break;
             case "MostExpensive":
-                products = products.OrderByDescending(p => p.Price).AsQueryable();
+                products = products.OrderByDescending(p => p.FinalPrice).AsQueryable();
                 break;
             default:
                 break;

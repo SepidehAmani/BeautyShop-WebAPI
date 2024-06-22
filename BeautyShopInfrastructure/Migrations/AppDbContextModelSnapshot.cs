@@ -50,7 +50,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactUs");
+                    b.ToTable("ContactUs", (string)null);
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Image.Image", b =>
@@ -81,7 +81,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Order.Order", b =>
@@ -117,7 +117,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Order.OrderItem", b =>
@@ -149,7 +149,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasIndex("ProductItemId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Product.Category", b =>
@@ -175,7 +175,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -249,7 +249,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasIndex("GeneralImageId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
@@ -324,7 +324,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductFeatures");
+                    b.ToTable("ProductFeatures", (string)null);
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Product.ProductItem", b =>
@@ -360,7 +360,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductItems");
+                    b.ToTable("ProductItems", (string)null);
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.User.Role", b =>
@@ -383,7 +383,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -423,7 +423,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
@@ -463,7 +463,7 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSelectedRoles");
+                    b.ToTable("UserSelectedRoles", (string)null);
 
                     b.HasData(
                         new

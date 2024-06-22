@@ -4,7 +4,9 @@ using BeautyShopDomain.Entities.Image;
 using BeautyShopDomain.Entities.Order;
 using BeautyShopDomain.Entities.Product;
 using BeautyShopDomain.Entities.User;
+using BeautyShopDomain.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace BeautyShopInfrastructure.DBContext;
 
@@ -26,6 +28,8 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<UserSelectedRole> UserSelectedRoles { get; set; }
     public DbSet<Image> Images { get; set; }
+
+    public DbSet<DiscountedProductViewModel> DiscountedProducts { get; set; }
 
 
 
@@ -67,6 +71,13 @@ public class AppDbContext : DbContext
             new Product(){Id=-3,CategoryId=-3,Description="",Name="Product3",Price=1000,DiscountPercentage=10 },
             new Product(){Id=-2,CategoryId=-4,Description="",Name="Product2",Price=2000,DiscountPercentage=10 },
             new Product(){Id=-1,CategoryId=-3,Description="",Name="Product1",Price=2000,DiscountPercentage=10 }
-            ]);
+        ]);
+
+
+        builder.Entity<DiscountedProductViewModel>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("DiscountedProducts");
+        });
     }
 }
