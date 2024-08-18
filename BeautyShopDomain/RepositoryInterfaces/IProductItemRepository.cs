@@ -1,9 +1,10 @@
-﻿using BeautyShopDomain.DTOs;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.DTOs;
 using BeautyShopDomain.Entities.Product;
 
 namespace BeautyShopDomain.RepositoryInterfaces;
 
-public interface IProductItemRepository
+public interface IProductItemRepository : IScopedDependency
 {
     Task<ICollection<ProductItemDTO>?> GetProductItemDTOsByProductId(int productId, CancellationToken cancellation);
     Task<ICollection<ProductItem>?> GetProductItemsByProductId(int productId, CancellationToken cancellation);

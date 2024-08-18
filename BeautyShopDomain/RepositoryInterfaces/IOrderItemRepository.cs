@@ -1,9 +1,10 @@
-﻿using BeautyShopDomain.DTOs;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.DTOs;
 using BeautyShopDomain.Entities.Order;
 
 namespace BeautyShopDomain.RepositoryInterfaces;
 
-public interface IOrderItemRepository
+public interface IOrderItemRepository : IScopedDependency
 {
     void AddOrderItem(OrderItem orderItem);
     void UpdateOrderItem(OrderItem orderItem);

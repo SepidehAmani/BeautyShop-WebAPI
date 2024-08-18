@@ -1,9 +1,10 @@
-﻿using BeautyShopDomain.DTOs;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.DTOs;
 using BeautyShopDomain.DTOs.AdminSide;
 
 namespace BeautyShopApplication.Services.Interface;
 
-public interface IProductService
+public interface IProductService : IScopedDependency
 {
     Task<ProductPageDTO?> GetProductPageDTO(int productId, CancellationToken cancellation);
     bool ValidateImageFile(CreateImageDTO imageDTO);

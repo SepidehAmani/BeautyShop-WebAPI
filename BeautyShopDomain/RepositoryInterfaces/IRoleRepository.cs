@@ -1,9 +1,10 @@
-﻿using BeautyShopDomain.DTOs.AdminSide;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.DTOs.AdminSide;
 using BeautyShopDomain.Entities.User;
 
 namespace BeautyShopDomain.RepositoryInterfaces;
 
-public interface IRoleRepository
+public interface IRoleRepository : IScopedDependency
 {
     Task<ICollection<Role>?> GetRolesByUserId(int userId, CancellationToken cancellation);
     Task<bool> AddRoleToUser(int userId, ICollection<string>? roleNames, CancellationToken cancellation);
