@@ -9,6 +9,10 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Scrutor;
+using Microsoft.Extensions.DependencyModel;
+using BeautyShopDomain.DependencyInjection;
+using BeautyShopWebAPI.Services;
 
 namespace BeautyShopWebAPI
 {
@@ -35,7 +39,7 @@ namespace BeautyShopWebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1",new OpenApiInfo { Title="BeautyShopWebAPI",Version="v1"});
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "BeautyShopWebAPI", Version = "v1" });
                 options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -63,32 +67,12 @@ namespace BeautyShopWebAPI
                 });
             });
 
-            
+
 
             builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopDb")));
+            options.UseInMemoryDatabase("Test"));
 
-
-            //IOC
-            builder.Services.AddScoped<IContactUsRepository, ContactUsRepository>();
-            builder.Services.AddScoped<IContactUsService, ContactUsService>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IRoleService, RoleService>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IProductItemRepository, ProductItemRepository>();
-            builder.Services.AddScoped<IProductFeatureRepository, ProductFeatureRepository>();
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<IImageRepository, ImageRepository>();
-            builder.Services.AddScoped<IImageService, ImageService>();
-            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-            builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
-            builder.Services.AddScoped<IOrderService, OrderService>();
-
+            builder.Services.RegisterServices();
 
 
 
@@ -124,7 +108,7 @@ namespace BeautyShopWebAPI
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),"Images")),
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
                 RequestPath = "/Images"
             });
 

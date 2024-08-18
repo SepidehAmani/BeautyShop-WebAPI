@@ -1,8 +1,9 @@
-﻿using BeautyShopDomain.Entities.Order;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.Entities.Order;
 
 namespace BeautyShopDomain.RepositoryInterfaces;
 
-public interface IOrderRepository
+public interface IOrderRepository : IScopedDependency
 {
     Task<Order?> GetOpenOrderByUserId(int userId, CancellationToken cancellation);
     void AddOrder(Order order);

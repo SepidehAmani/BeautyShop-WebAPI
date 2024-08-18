@@ -1,9 +1,10 @@
-﻿using BeautyShopDomain.DTOs;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.DTOs;
 using BeautyShopDomain.DTOs.AdminSide;
 
 namespace BeautyShopApplication.Services.Interface;
 
-public interface IOrderService
+public interface IOrderService : IScopedDependency
 {
     Task<bool> AddItemToShopCard(AddToShopCardDTO addToShopCardDTO, int userId, CancellationToken cancellation);
     Task<ShowShopCardDTO?> GetShopCard(int userId, CancellationToken cancellation);

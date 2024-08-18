@@ -1,8 +1,9 @@
-﻿using BeautyShopDomain.DTOs;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.DTOs;
 
 namespace BeautyShopApplication.Services.Interface;
 
-public interface ICategoryService
+public interface ICategoryService : IScopedDependency
 {
     Task<ICollection<ProductBoxDTO>?> GetProductDTOsByCategoryId(int categoryId,
         CategoryPageRequestDTO requestDTO, CancellationToken cancellation);

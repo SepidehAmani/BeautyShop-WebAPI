@@ -1,8 +1,9 @@
-﻿using BeautyShopDomain.Entities.ContactUs;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.Entities.ContactUs;
 
 namespace BeautyShopDomain.RepositoryInterfaces;
 
-public interface IContactUsRepository
+public interface IContactUsRepository : IScopedDependency
 {
     Task<ICollection<ContactUs>?> GetListOfContactUs(CancellationToken cancellation);
     Task<ContactUs?> GetContactUsById(int id, CancellationToken cancellation);

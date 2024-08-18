@@ -1,10 +1,11 @@
-﻿using BeautyShopDomain.DTOs;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.DTOs;
 using BeautyShopDomain.DTOs.AdminSide;
 using BeautyShopDomain.Entities.User;
 
 namespace BeautyShopDomain.RepositoryInterfaces;
 
-public interface IUserRepository
+public interface IUserRepository : IScopedDependency
 {
     Task<bool> UserExistsWithThisMobile(string mobile, CancellationToken cancellation);
     void AddUser(User user);

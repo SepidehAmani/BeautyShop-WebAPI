@@ -1,9 +1,10 @@
-﻿using BeautyShopDomain.DTOs;
+﻿using BeautyShopDomain.DependencyInjection;
+using BeautyShopDomain.DTOs;
 using BeautyShopDomain.DTOs.AdminSide;
 
 namespace BeautyShopApplication.Services.Interface;
 
-public interface IRoleService
+public interface IRoleService : IScopedDependency
 {
     Task<ICollection<RoleDTO>?> GetListOfRoleDTOs(CancellationToken cancellation);
     Task<RoleDTO?> GetRoleDTOByRoleId(int roleId, CancellationToken cancellation);
