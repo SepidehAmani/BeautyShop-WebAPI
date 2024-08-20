@@ -70,7 +70,7 @@ namespace BeautyShopWebAPI
 
 
             builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseInMemoryDatabase("Test"));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("BeautyShopDb")));
 
             builder.Services.RegisterServices();
 

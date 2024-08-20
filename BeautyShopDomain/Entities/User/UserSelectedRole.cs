@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BeautyShopDomain.Entities.User;
 
-public class UserSelectedRole : BaseEntity
+public class UserSelectedRole : BaseEntity, IEntity
 {
     public int UserId { get; set; }
     public int RoleId { get; set; }

@@ -1,8 +1,8 @@
 ﻿using BeautyShopApplication.Services.Interface;
-using BeautyShopApplication.Utilities;
 using BeautyShopDomain.DTOs;
 using BeautyShopDomain.Entities.User;
 using BeautyShopDomain.RepositoryInterfaces;
+using BeautyShopDomain.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

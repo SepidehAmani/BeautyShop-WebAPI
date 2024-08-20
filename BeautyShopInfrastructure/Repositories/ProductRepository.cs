@@ -18,7 +18,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product?> GetProductById(int id,CancellationToken cancellation)
     {
-        return await _context.Products.Where(p => p.Id == id && !p.IsDelete).Include(p=> p.GeneralImage).FirstOrDefaultAsync(cancellation);
+        return await _context.Set<Product>().Where(p => p.Id == id && !p.IsDelete).Include(p=> p.GeneralImage).FirstOrDefaultAsync(cancellation);
     }
 
     public async Task<ICollection<ProductBoxDTO>?> GetProductBoxDTOsByCategoryIds(List<int> categoryIds,CategoryPageRequestDTO requestDTO,CancellationToken cancellation)
@@ -49,12 +49,12 @@ public class ProductRepository : IProductRepository
 
     public void AddProduct(Product product)
     {
-        _context.Products.Add(product);
+        _context.Set<Product>().Add(product);
     }
 
     public void UpdateProduct(Product product)
     {
-        _context.Products.Update(product);
+        _context.Set<Product>().Update(product);
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellation)
@@ -64,7 +64,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<bool> ProductExistsWithId(int id,CancellationToken cancellation)
     {
-        return await _context.Products.AnyAsync(p => p.Id == id && !p.IsDelete);
+        return await _context.Set<Product>().AnyAsync(p => p.Id == id && !p.IsDelete);
     }
 
 

@@ -3,7 +3,7 @@ using BeautyShopDomain.Entities.Image;
 
 namespace BeautyShopDomain.Entities.Product
 {
-    public class Product : BaseEntity
+    public class Product : BaseEntity, IEntity
     {
         public int CategoryId { get; set; }
         public string Name { get; set; }

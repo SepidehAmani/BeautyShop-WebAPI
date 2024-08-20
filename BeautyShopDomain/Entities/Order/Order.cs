@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BeautyShopDomain.Entities.Order;
 
-public class Order : BaseEntity
+public class Order : BaseEntity, IEntity
 {
     public int UserId { get; set; }
     public string? Address { get; set; }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BeautyShopDomain.Entities.Product;
 
-public class Category : BaseEntity
+public class Category : BaseEntity, IEntity
 {
     public int? ParentId { get; set; }
     public string Name { get; set; }
@@ -11,4 +11,5 @@ public class Category : BaseEntity
 
 
     public ICollection<Product>? Products { get; set; }
+
 }

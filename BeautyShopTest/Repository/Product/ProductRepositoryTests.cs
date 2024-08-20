@@ -1,5 +1,6 @@
 ﻿using BeautyShopDomain.DTOs;
 using BeautyShopDomain.Entities.Product;
+using BeautyShopDomain.Entities.User;
 using BeautyShopInfrastructure.DBContext;
 using BeautyShopInfrastructure.Repositories;
 using FakeItEasy;
@@ -19,25 +20,25 @@ public class ProductRepositoryTests
 
         dbContext.Database.EnsureCreated();
 
-        if (! await dbContext.Products.AnyAsync(p=> p.Id==1))
+        if (! await dbContext.Set<User>().AnyAsync(p=> p.Id==1))
         {
-            dbContext.Categories.Add(new Category() { Id = 1, Name = "Test1" });
-            dbContext.Categories.Add(new Category() { Id = 2, Name = "Test2", ParentId = 1 });
+            dbContext.Set<Category>().Add(new Category() { Id = 1, Name = "Test1" });
+            dbContext.Set<Category>().Add(new Category() { Id = 2, Name = "Test2", ParentId = 1 });
 
-            dbContext.Products.Add(
+            dbContext.Set<BeautyShopDomain.Entities.Product.Product>().Add(
                 new BeautyShopDomain.Entities.Product.Product() { Id = 1,Name = "Test",CategoryId=2,Price=1000,DiscountPercentage=0}
                 );
 
             for (int i = 1; i <= 2; i++)
             {
-                dbContext.ProductItems.Add(
+                dbContext.Set<ProductItem>().Add(
                 new ProductItem() { ProductId=1,Quantity=2, Color="red"}
                 );
             }
 
             for (int i = 1; i <= 2; i++)
             {
-                dbContext.ProductFeatures.Add(
+                dbContext.Set<ProductFeature>().Add(
                 new ProductFeature() { ProductId=1,Title="Test",Description="Test"}
                 );
             }

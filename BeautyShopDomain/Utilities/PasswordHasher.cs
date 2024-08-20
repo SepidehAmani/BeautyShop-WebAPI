@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace BeautyShopApplication.Utilities;
+namespace BeautyShopDomain.Utilities;
 
 public class PasswordHasher
 {

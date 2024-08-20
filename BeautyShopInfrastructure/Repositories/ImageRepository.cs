@@ -16,7 +16,7 @@ public class ImageRepository : IImageRepository
 
     public void AddImage(Image image)
     {
-        _context.Images.Add(image);
+        _context.Set<Image>().Add(image);
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellation)

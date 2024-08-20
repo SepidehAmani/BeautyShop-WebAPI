@@ -4,7 +4,7 @@ using BeautyShopDomain.Entities.Order;
 
 namespace BeautyShopDomain.Entities.Product;
 
-public class ProductItem : BaseEntity
+public class ProductItem : BaseEntity, IEntity
 {
     public int ProductId { get; set; }
     public int? ImageId { get; set; }

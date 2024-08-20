@@ -18,18 +18,18 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order?> GetOpenOrderByUserId(int userId,CancellationToken cancellation)
     {
-        return await _context.Orders
+        return await _context.Set<Order>()
             .FirstOrDefaultAsync(p => p.UserId == userId && p.Status == OrderStatus.Open && !p.IsDelete);
     }
 
     public void AddOrder(Order order)
     {
-        _context.Orders.Add(order);
+        _context.Set<Order>().Add(order);
     }
 
     public void UpdateOrder(Order order)
     {
-        _context.Orders.Update(order);
+        _context.Set<Order>().Update(order);
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellation)
@@ -40,13 +40,13 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order?> GetClosedOrderById(int orderId,CancellationToken cancellation)
     {
-        return await _context.Orders.FirstOrDefaultAsync(p => p.Id == orderId && p.Status == OrderStatus.Closed && !p.IsDelete, cancellation);
+        return await _context.Set<Order>().FirstOrDefaultAsync(p => p.Id == orderId && p.Status == OrderStatus.Closed && !p.IsDelete, cancellation);
     }
 
 
     public async Task<ICollection<Order>?> GetListOfPayedOrders(CancellationToken cancellation)
     {
-        return await _context.Orders
+        return await _context.Set<Order>()
             .Where(p => !p.IsDelete && (p.Status == OrderStatus.Payed || p.Status == OrderStatus.Shipped))
             .ToListAsync(cancellation);
     }
@@ -54,12 +54,12 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order?> GetOrderWithItemsById(int orderId,CancellationToken cancellation)
     {
-        return await _context.Orders.Where(p => p.Id == orderId && !p.IsDelete)
+        return await _context.Set<Order>().Where(p => p.Id == orderId && !p.IsDelete)
             .Include(p => p.OrderItems).FirstOrDefaultAsync(cancellation);
     }
 
     public async Task<Order?> GetOrderById(int orderId, CancellationToken cancellation)
     {
-        return await _context.Orders.Where(p => p.Id == orderId && !p.IsDelete).FirstOrDefaultAsync(cancellation);
+        return await _context.Set<Order>().Where(p => p.Id == orderId && !p.IsDelete).FirstOrDefaultAsync(cancellation);
     }
 }

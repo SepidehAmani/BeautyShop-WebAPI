@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
 
-namespace BeautyShopApplication.Utilities;
+namespace BeautyShopDomain.Utilities;
 
 public static class UsersUtilities
 {

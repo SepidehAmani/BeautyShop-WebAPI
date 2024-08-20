@@ -3,7 +3,7 @@ using BeautyShopDomain.Entities.Product;
 
 namespace BeautyShopDomain.Entities.Order;
 
-public class OrderItem : BaseEntity
+public class OrderItem : BaseEntity, IEntity
 {
     public int OrderId { get; set; }
     public int ProductItemId { get; set; }
