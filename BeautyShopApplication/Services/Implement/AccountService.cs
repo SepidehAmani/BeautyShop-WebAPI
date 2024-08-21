@@ -1,8 +1,9 @@
-﻿using BeautyShopApplication.Services.Interface;
-using BeautyShopApplication.Utilities;
+﻿using BeautyShopApplication.Exceptions;
+using BeautyShopApplication.Services.Interface;
 using BeautyShopDomain.DTOs;
 using BeautyShopDomain.Entities.User;
 using BeautyShopDomain.RepositoryInterfaces;
+using BeautyShopDomain.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -28,7 +29,7 @@ public class AccountService : IAccountService
     public async Task<bool> RegisterUser (RegisterUserDTO userDTO, CancellationToken cancellation)
     {
         var userExists = await _userRepository.UserExistsWithThisMobile(userDTO.MobileNumber, cancellation);
-        if (userExists) return false;
+        if (userExists)  throw new UserExistsWithThisMobileException();
 
         var user = new User()
         {

@@ -18,12 +18,12 @@ public class OrderItemRepository : IOrderItemRepository
 
     public void AddOrderItem(OrderItem orderItem)
     {
-        _context.OrderItems.Add(orderItem);
+        _context.Set<OrderItem>().Add(orderItem);
     }
 
     public void UpdateOrderItem(OrderItem orderItem)
     {
-        _context.OrderItems.Update(orderItem);
+        _context.Set<OrderItem>().Update(orderItem);
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellation)
@@ -33,26 +33,26 @@ public class OrderItemRepository : IOrderItemRepository
 
     public async Task<ICollection<OrderItemDTO>?> GetOrderItemDTOsByOrderId(int orderId,CancellationToken cancellation)
     {
-        return await _context.OrderItems.Where(p=> p.OrderId == orderId && !p.IsDelete)
+        return await _context.Set<OrderItem>().Where(p=> p.OrderId == orderId && !p.IsDelete)
             .Select(p=> new OrderItemDTO() { Id=p.Id,OrderCount=p.OrderCount,ProductItemId=p.ProductItemId})
             .ToListAsync(cancellation);
     }
 
     public async Task<OrderItem?> GetOrderItemById(int id,CancellationToken cancellation)
     {
-        return await _context.OrderItems.FirstOrDefaultAsync(p=> p.Id == id && !p.IsDelete,cancellation);
+        return await _context.Set<OrderItem>().FirstOrDefaultAsync(p=> p.Id == id && !p.IsDelete,cancellation);
     }
 
 
     public async Task<int> GetCountOfCurrentShopItems(int openOrderId,CancellationToken cancellation)
     {
-        return await _context.OrderItems.Where(p => p.OrderId == openOrderId && !p.IsDelete).CountAsync(cancellation);
+        return await _context.Set<OrderItem>().Where(p => p.OrderId == openOrderId && !p.IsDelete).CountAsync(cancellation);
     }
 
 
     public async Task<ICollection<OrderItem>?> GetOrderItemsByOrderId(int orderId,CancellationToken cancellation)
     {
-        return await _context.OrderItems.Where(p => p.OrderId == orderId && !p.IsDelete).ToListAsync(cancellation);
+        return await _context.Set<OrderItem>().Where(p => p.OrderId == orderId && !p.IsDelete).ToListAsync(cancellation);
     }
 
 }

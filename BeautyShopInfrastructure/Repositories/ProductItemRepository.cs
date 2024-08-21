@@ -16,24 +16,24 @@ public class ProductItemRepository : IProductItemRepository
 
     public async Task<ICollection<ProductItemDTO>?> GetProductItemDTOsByProductId(int productId,CancellationToken cancellation)
     {
-        return await _context.ProductItems.Where(p => p.ProductId == productId && !p.IsDelete)
+        return await _context.Set<ProductItem>().Where(p => p.ProductId == productId && !p.IsDelete)
             .Select(p => new ProductItemDTO() { Id = p.Id, Color = p.Color, ImagePath = p.Image.Path, Quantity = p.Quantity })
             .ToListAsync(cancellation);
     }
 
     public async Task<ICollection<ProductItem>?> GetProductItemsByProductId(int productId,CancellationToken cancellation)
     {
-        return await _context.ProductItems.Where(p => p.ProductId == productId && !p.IsDelete).ToListAsync(cancellation);
+        return await _context.Set<ProductItem>().Where(p => p.ProductId == productId && !p.IsDelete).ToListAsync(cancellation);
     }
 
     public void AddProductItem(ProductItem item)
     {
-        _context.ProductItems.Add(item);
+        _context.Set<ProductItem>().Add(item);
     }
 
     public void UpdateProductItem(ProductItem item)
     {
-        _context.ProductItems.Update(item);
+        _context.Set<ProductItem>().Update(item);
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellation)
@@ -44,16 +44,16 @@ public class ProductItemRepository : IProductItemRepository
 
     public async Task<bool> ProductItemExistsWithId(int productItemId,CancellationToken cancellation)
     {
-        return await _context.ProductItems.AnyAsync(p => p.Id == productItemId && !p.IsDelete);
+        return await _context.Set<ProductItem>().AnyAsync(p => p.Id == productItemId && !p.IsDelete);
     }
 
     public async Task<ProductItem?> GetProductItemById(int id,CancellationToken cancellation)
     {
-        return await _context.ProductItems.Where(p => p.Id == id && !p.IsDelete).FirstOrDefaultAsync(cancellation);
+        return await _context.Set<ProductItem>().Where(p => p.Id == id && !p.IsDelete).FirstOrDefaultAsync(cancellation);
     }
 
     public async Task<ProductItem?> GetProductItemWithProductById(int id, CancellationToken cancellation)
     {
-        return await _context.ProductItems.Where(p => p.Id == id && !p.IsDelete).Include(p=> p.Product).FirstOrDefaultAsync(cancellation);
+        return await _context.Set<ProductItem>().Where(p => p.Id == id && !p.IsDelete).Include(p=> p.Product).FirstOrDefaultAsync(cancellation);
     }
 }

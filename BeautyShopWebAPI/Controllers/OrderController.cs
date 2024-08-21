@@ -1,8 +1,8 @@
 ﻿using BeautyShopApplication.Services.Interface;
-using BeautyShopApplication.Utilities;
 using BeautyShopDomain.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BeautyShopDomain.Utilities;
 
 namespace BeautyShopWebAPI.Controllers;
 

@@ -2,7 +2,7 @@
 
 namespace BeautyShopDomain.Entities.Product;
 
-public class ProductFeature : BaseEntity
+public class ProductFeature : BaseEntity, IEntity
 {
     public int ProductId { get; set; }
     public string Title { get; set; }

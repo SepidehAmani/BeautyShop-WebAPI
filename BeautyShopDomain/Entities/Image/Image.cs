@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BeautyShopDomain.Entities.Image;
 
-public class Image
+public class Image : IEntity
 {
     public int Id { get; set; }
     public string Name { get; set; }

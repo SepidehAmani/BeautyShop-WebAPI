@@ -2,7 +2,7 @@
 
 namespace BeautyShopDomain.Entities.ContactUs;
 
-public class ContactUs : BaseEntity
+public class ContactUs : BaseEntity , IEntity
 {
     public string Email { get; set; }
     public string MobileNumber { get; set; }

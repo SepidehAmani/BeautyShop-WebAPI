@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeautyShopInfrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240501194957_SeedEvenMoreData")]
-    partial class SeedEvenMoreData
+    [Migration("20240820085420_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -56,6 +56,37 @@ namespace BeautyShopInfrastructure.Migrations
                     b.ToTable("ContactUs");
                 });
 
+            modelBuilder.Entity("BeautyShopDomain.Entities.Image.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("SizeInBytes")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Image");
+                });
+
             modelBuilder.Entity("BeautyShopDomain.Entities.Order.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -65,7 +96,6 @@ namespace BeautyShopInfrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateDate")
@@ -74,8 +104,10 @@ namespace BeautyShopInfrastructure.Migrations
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsSeen")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -84,11 +116,16 @@ namespace BeautyShopInfrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Order.OrderItem", b =>
@@ -111,16 +148,26 @@ namespace BeautyShopInfrastructure.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("OrderId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductItemId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("OrderId1");
+
                     b.HasIndex("ProductItemId");
 
-                    b.ToTable("OrderItems");
+                    b.HasIndex("ProductItemId1");
+
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Product.Category", b =>
@@ -139,34 +186,35 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
                         {
                             Id = -2,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(6668),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 153, DateTimeKind.Local).AddTicks(8904),
                             IsDelete = false,
                             Name = "آرایشی"
                         },
                         new
                         {
                             Id = -1,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(6674),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 153, DateTimeKind.Local).AddTicks(8923),
                             IsDelete = false,
                             Name = "بهداشتی"
                         },
                         new
                         {
                             Id = -4,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(6677),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 153, DateTimeKind.Local).AddTicks(8924),
                             IsDelete = false,
                             Name = "زیردسته بندی آرایشی",
                             ParentId = -2
@@ -174,7 +222,7 @@ namespace BeautyShopInfrastructure.Migrations
                         new
                         {
                             Id = -3,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(6680),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 153, DateTimeKind.Local).AddTicks(8925),
                             IsDelete = false,
                             Name = "زیردسته بندی بهداشتی",
                             ParentId = -1
@@ -192,24 +240,32 @@ namespace BeautyShopInfrastructure.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CategoryId1")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("DiscountPercentage")
                         .HasColumnType("int");
 
-                    b.Property<string>("GeneralImage")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("GeneralImageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GeneralImageId1")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -218,14 +274,22 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.HasIndex("CategoryId1");
+
+                    b.HasIndex("GeneralImageId")
+                        .IsUnique()
+                        .HasFilter("[GeneralImageId] IS NOT NULL");
+
+                    b.HasIndex("GeneralImageId1");
+
+                    b.ToTable("Product");
 
                     b.HasData(
                         new
                         {
                             Id = -4,
                             CategoryId = -4,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(7704),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 159, DateTimeKind.Local).AddTicks(1327),
                             Description = "",
                             DiscountPercentage = 10,
                             IsDelete = false,
@@ -236,7 +300,7 @@ namespace BeautyShopInfrastructure.Migrations
                         {
                             Id = -3,
                             CategoryId = -3,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(7716),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 159, DateTimeKind.Local).AddTicks(1346),
                             Description = "",
                             DiscountPercentage = 10,
                             IsDelete = false,
@@ -247,7 +311,7 @@ namespace BeautyShopInfrastructure.Migrations
                         {
                             Id = -2,
                             CategoryId = -4,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(7719),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 159, DateTimeKind.Local).AddTicks(1347),
                             Description = "",
                             DiscountPercentage = 10,
                             IsDelete = false,
@@ -258,7 +322,7 @@ namespace BeautyShopInfrastructure.Migrations
                         {
                             Id = -1,
                             CategoryId = -3,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(7722),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 159, DateTimeKind.Local).AddTicks(1348),
                             Description = "",
                             DiscountPercentage = 10,
                             IsDelete = false,
@@ -285,6 +349,9 @@ namespace BeautyShopInfrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -293,7 +360,9 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductFeatures");
+                    b.HasIndex("ProductId1");
+
+                    b.ToTable("ProductFeature");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Product.ProductItem", b =>
@@ -306,13 +375,14 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
@@ -320,14 +390,21 @@ namespace BeautyShopInfrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageId");
+
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductItems");
+                    b.HasIndex("ProductId1");
+
+                    b.ToTable("ProductItem");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.User.Role", b =>
@@ -350,13 +427,13 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
 
                     b.HasData(
                         new
                         {
                             Id = -1,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(6450),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 161, DateTimeKind.Local).AddTicks(7919),
                             IsDelete = false,
                             UniqueName = "Admin"
                         });
@@ -378,7 +455,8 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.Property<string>("MobileNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -386,17 +464,18 @@ namespace BeautyShopInfrastructure.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
 
                     b.HasData(
                         new
                         {
                             Id = -1,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(6746),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 164, DateTimeKind.Local).AddTicks(473),
                             IsDelete = false,
                             MobileNumber = "09141001010",
                             Password = "20-08-20-E3-22-78-15-ED-17-56-A6-B5-31-E7-E0-D2",
@@ -421,52 +500,108 @@ namespace BeautyShopInfrastructure.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RoleId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("RoleId1");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSelectedRoles");
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("UserSelectedRole");
 
                     b.HasData(
                         new
                         {
                             Id = -1,
-                            CreateDate = new DateTime(2024, 5, 2, 0, 19, 56, 470, DateTimeKind.Local).AddTicks(6715),
+                            CreateDate = new DateTime(2024, 8, 20, 12, 24, 19, 164, DateTimeKind.Local).AddTicks(2404),
                             IsDelete = false,
                             RoleId = -1,
                             UserId = -1
                         });
                 });
 
+            modelBuilder.Entity("BeautyShopDomain.ViewModels.DiscountedProductViewModel", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiscountPercentage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FinalPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GeneralImageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.HasIndex("GeneralImageId");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("DiscountedProducts", (string)null);
+                });
+
             modelBuilder.Entity("BeautyShopDomain.Entities.Order.Order", b =>
                 {
-                    b.HasOne("BeautyShopDomain.Entities.User.User", "User")
-                        .WithMany("Orders")
+                    b.HasOne("BeautyShopDomain.Entities.User.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("BeautyShopDomain.Entities.User.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Order.OrderItem", b =>
                 {
+                    b.HasOne("BeautyShopDomain.Entities.Order.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BeautyShopDomain.Entities.Order.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("OrderId1");
+
+                    b.HasOne("BeautyShopDomain.Entities.Product.ProductItem", null)
+                        .WithMany()
+                        .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeautyShopDomain.Entities.Product.ProductItem", "ProductItem")
                         .WithMany("OrderItems")
-                        .HasForeignKey("ProductItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductItemId1");
 
                     b.Navigation("Order");
 
@@ -475,54 +610,99 @@ namespace BeautyShopInfrastructure.Migrations
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Product.Product", b =>
                 {
-                    b.HasOne("BeautyShopDomain.Entities.Product.Category", "Category")
-                        .WithMany("Products")
+                    b.HasOne("BeautyShopDomain.Entities.Product.Category", null)
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BeautyShopDomain.Entities.Product.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId1");
+
+                    b.HasOne("BeautyShopDomain.Entities.Image.Image", null)
+                        .WithOne()
+                        .HasForeignKey("BeautyShopDomain.Entities.Product.Product", "GeneralImageId");
+
+                    b.HasOne("BeautyShopDomain.Entities.Image.Image", "GeneralImage")
+                        .WithMany()
+                        .HasForeignKey("GeneralImageId1");
+
                     b.Navigation("Category");
+
+                    b.Navigation("GeneralImage");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Product.ProductFeature", b =>
                 {
-                    b.HasOne("BeautyShopDomain.Entities.Product.Product", "Product")
-                        .WithMany("ProductFeatures")
+                    b.HasOne("BeautyShopDomain.Entities.Product.Product", null)
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("BeautyShopDomain.Entities.Product.Product", "Product")
+                        .WithMany("ProductFeatures")
+                        .HasForeignKey("ProductId1");
 
                     b.Navigation("Product");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Product.ProductItem", b =>
                 {
-                    b.HasOne("BeautyShopDomain.Entities.Product.Product", "Product")
-                        .WithMany("ProductItems")
+                    b.HasOne("BeautyShopDomain.Entities.Image.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId");
+
+                    b.HasOne("BeautyShopDomain.Entities.Product.Product", null)
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("BeautyShopDomain.Entities.Product.Product", "Product")
+                        .WithMany("ProductItems")
+                        .HasForeignKey("ProductId1");
+
+                    b.Navigation("Image");
 
                     b.Navigation("Product");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.User.UserSelectedRole", b =>
                 {
+                    b.HasOne("BeautyShopDomain.Entities.User.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BeautyShopDomain.Entities.User.Role", "Role")
                         .WithMany("UserSelectedRoles")
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("RoleId1");
+
+                    b.HasOne("BeautyShopDomain.Entities.User.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeautyShopDomain.Entities.User.User", "User")
                         .WithMany("UserSelectedRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BeautyShopDomain.ViewModels.DiscountedProductViewModel", b =>
+                {
+                    b.HasOne("BeautyShopDomain.Entities.Image.Image", "GeneralImage")
+                        .WithMany()
+                        .HasForeignKey("GeneralImageId");
+
+                    b.Navigation("GeneralImage");
                 });
 
             modelBuilder.Entity("BeautyShopDomain.Entities.Order.Order", b =>
