@@ -1,18 +1,13 @@
-using BeautyShopApplication.Services.Implement;
-using BeautyShopApplication.Services.Interface;
-using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopInfrastructure.DBContext;
-using BeautyShopInfrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using Scrutor;
-using Microsoft.Extensions.DependencyModel;
-using BeautyShopDomain.DependencyInjection;
 using BeautyShopWebAPI.Services;
+using Serilog;
+using BeautyShopWebAPI.Exception_handler;
 
 namespace BeautyShopWebAPI
 {
@@ -22,6 +17,10 @@ namespace BeautyShopWebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Host.UseSerilog((context, services, configuration) => configuration
+                .ReadFrom.Configuration(context.Configuration));
+
+          
             // Add services to the container.
 
             builder.Services.AddControllers(options =>
@@ -32,6 +31,10 @@ namespace BeautyShopWebAPI
                 .AddXmlDataContractSerializerFormatters();
 
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -100,6 +103,8 @@ namespace BeautyShopWebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseExceptionHandler();
 
             app.UseHttpsRedirection();
 

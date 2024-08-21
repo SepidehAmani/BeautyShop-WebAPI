@@ -28,6 +28,7 @@ namespace BeautyShopWebAPI.Controllers
         [HttpGet("Categories")]
         public async Task<ActionResult> GetListOfCategories(CancellationToken cancellation=default)
         {
+            throw new Exception("My exception");
             return Ok(await _categoryService.GetListOfCategoryDTOs(cancellation));
         }
     }
