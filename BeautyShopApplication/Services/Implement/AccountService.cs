@@ -1,6 +1,7 @@
 ﻿using BeautyShopApplication.Exceptions;
 using BeautyShopApplication.Services.Interface;
 using BeautyShopDomain.DTOs;
+using BeautyShopDomain.DTOs.AdminSide;
 using BeautyShopDomain.Entities.User;
 using BeautyShopDomain.RepositoryInterfaces;
 using BeautyShopDomain.Utilities;
@@ -28,15 +29,12 @@ public class AccountService : IAccountService
 
     public async Task<bool> RegisterUser (RegisterUserDTO userDTO, CancellationToken cancellation)
     {
-        var userExists = await _userRepository.UserExistsWithThisMobile(userDTO.MobileNumber, cancellation);
-        if (userExists)  throw new UserExistsWithThisMobileException();
+        //var userExists = await _userRepository.UserExistsWithThisMobile(userDTO.MobileNumber, cancellation);
+        //if (userExists)  throw new UserExistsWithThisMobileException();
 
-        var user = new User()
-        {
-            Username = userDTO.UserName,
-            MobileNumber = userDTO.MobileNumber.Trim(),
-            Password = PasswordHasher.EncodePasswordMd5(userDTO.Password)
-        };
+        var user = new User(userDTO.MobileNumber.Trim(), userDTO.UserName, userDTO.Password,_userRepository);
+        
+
 
         _userRepository.AddUser(user);
         await _userRepository.SaveChangesAsync(cancellation);

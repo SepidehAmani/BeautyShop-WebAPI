@@ -8,6 +8,7 @@ namespace BeautyShopDomain.RepositoryInterfaces;
 public interface IUserRepository : IScopedDependency
 {
     Task<bool> UserExistsWithThisMobile(string mobile, CancellationToken cancellation);
+    bool UserExistsWithThisMobile(string mobile);
     void AddUser(User user);
     void UpdateUser(User user);
     Task SaveChangesAsync(CancellationToken cancellation);

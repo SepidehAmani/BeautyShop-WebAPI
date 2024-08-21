@@ -21,6 +21,11 @@ public class UserRepository : IUserRepository
         return await _context.Set<User>().AnyAsync(p => p.MobileNumber == mobile.Trim() && !p.IsDelete);
     }
 
+    public bool UserExistsWithThisMobile(string mobile)
+    {
+        return  _context.Set<User>().Any(p => p.MobileNumber == mobile.Trim() && !p.IsDelete);
+    }
+
     public void AddUser(User user)
     {
         _context.Set<User>().Add(user);

@@ -32,6 +32,9 @@ public class UserService : IUserService
         var user = await _userRepository.GetUserById(userId, cancellation);
         if (user == null) return false;
 
+
+        user.SetMobile(userDTO.MobileNumber,_userRepository);
+
         user.Username = userDTO.Username;
         user.MobileNumber = userDTO.MobileNumber;
 
