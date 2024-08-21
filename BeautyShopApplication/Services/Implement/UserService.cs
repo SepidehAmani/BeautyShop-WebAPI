@@ -1,5 +1,6 @@
 ﻿using BeautyShopApplication.Services.Interface;
 using BeautyShopDomain.DTOs.AdminSide;
+using BeautyShopDomain.Exceptions;
 using BeautyShopDomain.RepositoryInterfaces;
 
 namespace BeautyShopApplication.Services.Implement;
@@ -30,13 +31,12 @@ public class UserService : IUserService
     public async Task<bool> EditUser(int userId,EditUserDTO userDTO,CancellationToken cancellation)
     {
         var user = await _userRepository.GetUserById(userId, cancellation);
-        if (user == null) return false;
+        if (user == null) throw new UserNotFoundException("User not Found");
 
 
         user.SetMobile(userDTO.MobileNumber,_userRepository);
 
         user.Username = userDTO.Username;
-        user.MobileNumber = userDTO.MobileNumber;
 
         _userRepository.UpdateUser(user);
         await _userRepository.SaveChangesAsync(cancellation);
